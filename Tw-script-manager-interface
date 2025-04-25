@@ -1,0 +1,59 @@
+(function () {
+    'use strict';
+
+    const scripts = [
+        {
+            name: 'Conversor Defesa POP',
+            active: false,
+            run: () => {
+                if (document.getElementById('twWrapper')) return;
+                fetch('https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js')
+                    .then(res => res.text())
+                    .then(code => eval(code))
+                    .catch(err => alert('Erro ao carregar Conversor Defesa POP: ' + err));
+            }
+        },
+        {
+            name: 'MP OP Auto',
+            active: false,
+            run: () => {
+                if (document.getElementById('mpopauto_interface')) return;
+                fetch('https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js')
+                    .then(res => res.text())
+                    .then(code => eval(code))
+                    .catch(err => alert('Erro ao carregar MP OP Auto: ' + err));
+            }
+        }
+    ];
+
+    const painel = document.createElement('div');
+    painel.style = 'position: fixed; top: 40px; left: 20px; z-index: 9999; background: #f4e4bc; padding: 10px; border: 2px solid #c4a300; font-family: Verdana;';
+    painel.innerHTML = `<b>Menu de Scripts</b><br><table><thead><tr><th style="text-align:left">Script</th><th>Ativar</th></tr></thead><tbody id="lista_scripts"></tbody></table>`;
+    document.body.appendChild(painel);
+
+    const lista = document.getElementById('lista_scripts');
+
+    scripts.forEach((s, i) => {
+        const tr = document.createElement('tr');
+        const nome = document.createElement('td');
+        nome.textContent = s.name;
+
+        const toggle = document.createElement('input');
+        toggle.type = 'checkbox';
+        toggle.onchange = () => {
+            if (toggle.checked) {
+                s.active = true;
+                s.run();
+            } else {
+                location.reload();
+            }
+        };
+
+        const tdToggle = document.createElement('td');
+        tdToggle.appendChild(toggle);
+
+        tr.appendChild(nome);
+        tr.appendChild(tdToggle);
+        lista.appendChild(tr);
+    });
+})();
