@@ -1,199 +1,235 @@
 (function () {
     'use strict';
 
-    const STORAGE_KEY = 'tw_script_manager_state_v2';
-    const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const defaultMensagem = `Olá [player]{player}[/player]!
 
-    const categories = {
-        ataque: '⚔️ Ataque',
-        defesa: '🛡️ Defesa',
-        organizacao: '🧩 Organização'
-    };
+[i]Segue seu alvo para a próxima OP.[/i]
 
-    const scripts = [
-        {
-            name: 'Conversor Defesa POP',
-            key: 'conversor',
-            icon: '🛠️',
-            tooltip: 'Converter tropas em código de defesa BB',
-            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js',
-            categoria: 'organizacao'
-        },
-        {
-            name: 'MP OP Auto',
-            key: 'mpop',
-            icon: '📨',
-            tooltip: 'Automatizar envio de MPs em OPs',
-            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js',
-            categoria: 'organizacao'
-        }
-    ];
+📅 [b]{data_hora}[/b]
 
-    const style = document.createElement('style');
-    style.textContent = `
-        #tw_script_manager_painel {
-            position: fixed;
-            top: 120px;
-            left: 20px;
-            z-index: 9999;
-            background: #f4e4bc;
-            padding: 10px;
-            border: 2px solid #c4a300;
-            font-family: Verdana;
-            border-radius: 12px;
-            box-shadow: 2px 2px 8px #0006;
-            transition: opacity 0.3s ease;
-        }
-        #tw_script_manager_painel.dark {
-            background: #2b2b2b;
-            color: #f0f0f0;
-            border: 2px solid #888;
-        }
-        #tw_script_log {
-            margin-top: 10px;
-            font-size: 11px;
-        }
-        .tw_script_loaded {
-            color: green;
-            font-weight: bold;
-        }
-        .tw_script_category {
-            font-weight: bold;
-            padding-top: 8px;
-        }
-        .tw_script_action {
-            margin-left: 4px;
-            cursor: pointer;
-        }
-        #tw_script_manager_painel.dragging {
-            opacity: 0.7;
-        }
-    `;
-    document.head.appendChild(style);
+⚔️ [b]ALVOS NT[/b]
+[spoiler=Spoiler]
+{alvos}
+[/spoiler]
 
-    const painel = document.createElement('div');
-    painel.id = 'tw_script_manager_painel';
-    painel.style.display = 'none';
-    painel.innerHTML = `
-        <b>Menu de Scripts</b>
-        <label style="float:right;font-size:11px;"><input type="checkbox" id="toggle_escuro"> 🌙 Escuro</label><br style="clear:both">
-        <label style="font-size:11px;"><input type="checkbox" id="ocultar_desativados"> Ocultar desativados</label>
-        <div id="lista_scripts" style="margin-top:5px;"></div>
-        <div id="tw_script_log" style="color: green;"></div>
-    `;
-    document.body.appendChild(painel);
+⚔️ [b]ALVOS FAKES[/b]
+[spoiler=Spoiler]
+{fakes}
+[/spoiler]`;
 
-    // Engrenagem (botão flutuante)
-    const toggleBtn = document.createElement('div');
-    toggleBtn.className = 'quest';
-    toggleBtn.id = 'tw_toggle_interface';
-    toggleBtn.title = 'Abrir Script Manager';
-    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
-    toggleBtn.style.cursor = 'pointer';
-    toggleBtn.style.position = 'fixed';
-    toggleBtn.style.top = '150px';
-    toggleBtn.style.left = '20px';
-    toggleBtn.style.zIndex = '10000';
-    toggleBtn.style.width = '32px';
-    toggleBtn.style.height = '32px';
-    toggleBtn.style.backgroundSize = 'cover';
-    document.body.appendChild(toggleBtn);
+    const addLog = (msg) => {
+    const box = document.getElementById('log_envio_mp');
+    if (box) {
+        const p = document.createElement('div');
+        p.textContent = msg;
+        box.appendChild(p);
+    }
+    const logs = JSON.parse(localStorage.getItem('mp_logs') || '[]');
+    logs.push(msg);
+    localStorage.setItem('mp_logs', JSON.stringify(logs));
+};
+
+    let fila = JSON.parse(localStorage.getItem('fila_mp') || '[]');
+    let total = parseInt(localStorage.getItem('fila_total') || '0');
+
+    if (fila.length > 0 && window.location.href.includes('screen=mail') && window.location.href.includes('mode=new')) {
+        const atual = fila.shift();
+        localStorage.setItem('fila_mp', JSON.stringify(fila));
+        localStorage.setItem('fila_total', total);
+
+        const inputTo = document.querySelector('input[name="to"]');
+        const inputSubject = document.querySelector('input[name="subject"]');
+        const inputText = document.querySelector('textarea[name="text"]');
+        const btnSubmit = document.querySelector("input[type='submit'][name='send']");
+
+        if (inputTo && inputSubject && inputText && btnSubmit) {
+            inputTo.value = atual.player;
+            inputSubject.value = atual.assunto;
+            inputText.value = atual.corpo;
+
+            setTimeout(() => {
+                btnSubmit.click();
+            }, 1000);
+
+            setTimeout(() => {
+                if (fila.length > 0) {
+                        const params = new URLSearchParams(window.location.search);
+                    const village = params.get('village');
+                    window.location.href = `/game.php?village=${village}&screen=mail&mode=new`;
+                    }
+                }, 500);
+        }
+
+        if (fila.length === 0) {
+            addLog(`📨 Enviado para ${atual.player} (${total}/${total})`);
+            addLog(`✅ Todas as MPs foram enviadas.`);
+            const snd = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_4094e265d5.mp3?filename=notification-121041.mp3');
+            snd.addEventListener('canplaythrough', () => snd.play());
+            const btn = document.getElementById('iniciar_envio');
+            if (btn) {
+                btn.innerText = '▶️ Iniciar Envio';
+                btn.disabled = false;
+            }
+        } else {
+            addLog(`📨 Enviado para ${atual.player} (${total - fila.length}/${total})`);
+        }
+        return;
+    }
+
+    const getMensagemPadrao = () => localStorage.getItem('mp_mensagem_padrao') || defaultMensagem;
+    const setMensagemPadrao = (str) => localStorage.setItem('mp_mensagem_padrao', str);
+
+    const wrapper = document.createElement('div');
+    wrapper.style = 'position: fixed; top: 60px; right: 20px; z-index: 9999; font-family: Verdana;';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.textContent = 'MP OP Auto - by eleição';
+    toggleBtn.style = 'margin-bottom: 5px; width: 100%; background: #8b5a2b; color: white; border: none; padding: 5px; font-weight: bold;';
+
+    const container = document.createElement('div');
+    container.style = 'background: #f4e4bc; border: 3px solid #8b5a2b; color: #2e1a0f; max-width: 550px; box-shadow: 3px 3px 8px rgba(0,0,0,0.5); padding: 15px;';
+
+    const logBox = document.createElement('div');
+    logBox.id = 'log_envio_mp';
+    logBox.style = 'max-height: 120px; overflow-y: auto; border: 1px solid #ccc; background: #fff; padding: 5px; margin-top: 10px; font-size: 12px;';
+
+    container.innerHTML = `
+    <label><b>📌 Assunto:</b><br>
+      <input id="assunto_op" type="text" style="width:100%" value="${localStorage.getItem('mp_assunto') || '⚔️ OP - SEU ALVO 💥'}">
+    </label><br>
+
+    <label><b>🗓️ Data da OP:</b><br>
+      <input id="data_op" type="date" style="width:100%" value="${localStorage.getItem('mp_data') || ''}">
+    </label><br>
+
+    <label><b>🕒 Hora da OP:</b><br>
+      <input id="hora_op" type="time" style="width:100%" value="${localStorage.getItem('mp_hora') || ''}">
+    </label><br>
+
+    <label><b>📍 Coordenadas + Jogador:</b><br>
+      <textarea id="dados_mp" rows="4" style="width:100%">${localStorage.getItem('mp_dados') || ''}</textarea>
+    </label><br>
+
+    <label><b>🎯 Fakes:</b><br>
+      <textarea id="fakes_mp" rows="3" style="width:100%">${localStorage.getItem('mp_fakes') || ''}</textarea>
+    </label><br>
+
+    <label><input type="radio" name="modo_fake" value="igual" checked> Dividir igualmente</label><br>
+    <label><input type="radio" name="modo_fake" value="fixo"> Fakes por jogador: <input id="qtd_fixa" type="number" style="width: 60px"></label><br><br>
+
+    <button id="iniciar_envio" style="font-weight: bold; background: #d4b47c; border: 2px solid #8b5a2b; padding: 5px 10px">▶️ Iniciar Envio</button>
+    <button id="clear_fila" style="margin-left: 10px; font-weight: bold; background: #fdd; border: 1px solid red;">🧹 Limpar Dados</button>
+    <br><br>
+    <details>
+      <summary><b>📂 Modelo de Mensagem</b></summary>
+      <textarea id="template_padrao" rows="6" style="width:100%">${getMensagemPadrao()}</textarea><br>
+      <button id="salvar_padrao">💾 Salvar Modelo</button>
+      <button id="restaurar_padrao" style="margin-left: 10px">↩️ Restaurar Padrão</button>
+    </details>`;
+
+    container.appendChild(logBox);
+    wrapper.appendChild(toggleBtn);
+    wrapper.appendChild(container);
+    const savedLogs = JSON.parse(localStorage.getItem('mp_logs') || '[]');
+savedLogs.forEach(msg => {
+    const p = document.createElement('div');
+    p.textContent = msg;
+    logBox.appendChild(p);
+});
+document.body.appendChild(wrapper);
 
     toggleBtn.onclick = () => {
-        painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
+        container.style.display = container.style.display === 'none' ? 'block' : 'none';
     };
 
-    // Mini log
-    const log = document.getElementById('tw_script_log');
-    const addLog = (msg, color = 'green') => {
-        const time = new Date().toLocaleTimeString();
-        log.innerHTML = `<span style="color:${color}">[${time}] ${msg}</span>`;
+    document.getElementById('salvar_padrao').onclick = () => {
+        setMensagemPadrao(document.getElementById('template_padrao').value);
+        alert('Modelo salvo!');
     };
 
-    // Monta lista de scripts com categorias
-    const container = document.getElementById('lista_scripts');
+    document.getElementById('restaurar_padrao').onclick = () => {
+        document.getElementById('template_padrao').value = defaultMensagem;
+        setMensagemPadrao(defaultMensagem);
+        alert('Modelo restaurado para o padrão.');
+    };
 
-    const render = () => {
-        container.innerHTML = '';
-        const ocultar = document.getElementById('ocultar_desativados').checked;
+    document.getElementById('clear_fila').onclick = () => {
+        localStorage.removeItem('mp_assunto');
+        localStorage.removeItem('mp_data');
+        localStorage.removeItem('mp_hora');
+        localStorage.removeItem('mp_dados');
+        localStorage.removeItem('mp_fakes');
+        document.getElementById('assunto_op').value = '';
+        document.getElementById('data_op').value = '';
+        document.getElementById('hora_op').value = '';
+        document.getElementById('dados_mp').value = '';
+        document.getElementById('fakes_mp').value = '';
+        localStorage.removeItem('mp_logs');
+        document.getElementById('log_envio_mp').innerHTML = '';
+        alert('Dados de configuração apagados.');
+    };
 
-        Object.keys(categories).forEach(cat => {
-            const group = scripts.filter(s => s.categoria === cat);
-            if (group.length === 0) return;
+    document.getElementById('iniciar_envio').onclick = () => {
+        const btn = document.getElementById('iniciar_envio');
+        let originalText = btn.innerText;
+        btn.innerText = '⏳ Enviando...';
+        btn.disabled = true;
+        // Limpa logs ao iniciar nova OP
+        localStorage.removeItem('mp_logs');
+        document.getElementById('log_envio_mp').innerHTML = '';
+        const assunto = document.getElementById('assunto_op').value.trim();
+        const data_raw = document.getElementById('data_op').value;
+        const hora = document.getElementById('hora_op').value;
+        const dados = document.getElementById('dados_mp').value.trim();
+        const fakes = document.getElementById('fakes_mp').value.trim();
+        localStorage.setItem('mp_assunto', assunto);
+        localStorage.setItem('mp_dados', dados);
+        localStorage.setItem('mp_fakes', fakes);
+        localStorage.setItem('mp_data', data_raw);
+        localStorage.setItem('mp_hora', hora);
 
-            const catDiv = document.createElement('div');
-            catDiv.className = 'tw_script_category';
-            catDiv.textContent = categories[cat];
-            container.appendChild(catDiv);
+        const modo = document.querySelector('input[name="modo_fake"]:checked').value;
+        const qtdFixa = parseInt(document.getElementById('qtd_fixa').value);
 
-            group.forEach(script => {
-                const ativo = savedState[script.key];
-                if (ocultar && !ativo) return;
+        const [ano, mes, dia] = data_raw.split('-');
+        const datahora = `${dia}/${mes} - ${hora}`;
 
-                const div = document.createElement('div');
-                div.title = script.tooltip;
-                div.innerHTML = `
-                    ${script.icon} ${script.name}
-                    ${ativo ? '<span class="tw_script_loaded">✔️</span>' : ''}
-                    <input type="checkbox" ${ativo ? 'checked' : ''} data-key="${script.key}" style="margin-left:5px">
-                    <span class="tw_script_action" data-reload="${script.key}" title="Recarregar">🔄</span>
-                `;
-                container.appendChild(div);
-            });
+        const jogadores = {};
+        for (const linha of dados.split('\n')) {
+            const match = linha.match(/^(\d+\|\d+)\s+(.*)$/);
+            if (!match) continue;
+            const coord = match[1];
+            const nome = match[2];
+            if (!jogadores[nome]) jogadores[nome] = [];
+            jogadores[nome].push(coord);
+        }
+        addLog(`🔄 Separado ${Object.keys(jogadores).length} jogador(es) com seus alvos.`);
+
+        const fakeList = fakes.split('\n');
+        const nomes = Object.keys(jogadores);
+        const porJogador = modo === 'fixo' ? qtdFixa : Math.floor(fakeList.length / nomes.length);
+        addLog(`🎯 Dividindo ${fakeList.length} fakes em ${nomes.length} grupos (${porJogador} por jogador).`);
+
+        const fila = [];
+        let index = 0;
+        nomes.forEach((nome, i) => {
+            const coords = jogadores[nome];
+            const fake = fakeList.slice(index, index + porJogador);
+            index += porJogador;
+            const template = getMensagemPadrao()
+                .replace('{player}', nome)
+                .replace('{alvos}', coords.join('\n'))
+                .replace('{fakes}', fake.join('\n'))
+                .replace('{data_hora}', datahora);
+            fila.push({ player: nome, assunto, corpo: template });
         });
+
+        localStorage.setItem('fila_mp', JSON.stringify(fila));
+        localStorage.setItem('fila_total', fila.length);
+        addLog(`🚀 Iniciando envio de ${fila.length} MPs.`);
+
+        const params = new URLSearchParams(window.location.search);
+        const village = params.get('village');
+        window.location.href = `/game.php?village=${village}&screen=mail&mode=new`;
     };
-
-    const loadScript = (script, force = false) => {
-        if (document.getElementById(`tw_script_${script.key}`) && !force) return;
-        fetch(script.url)
-            .then(res => res.text())
-            .then(code => {
-                eval(code);
-                addLog(`${script.name} carregado`);
-            })
-            .catch(err => addLog(`Erro ao carregar ${script.name}: ${err}`, 'red'));
-    };
-
-    // Eventos
-    painel.addEventListener('change', (e) => {
-        const el = e.target;
-        if (el.id === 'toggle_escuro') {
-            painel.classList.toggle('dark', el.checked);
-            return;
-        }
-        if (el.id === 'ocultar_desativados') {
-            render();
-            return;
-        }
-        if (el.type === 'checkbox' && el.dataset.key) {
-            const key = el.dataset.key;
-            savedState[key] = el.checked;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-            render();
-            if (el.checked) {
-                const script = scripts.find(s => s.key === key);
-                if (script) loadScript(script);
-            }
-        }
-    });
-
-    painel.addEventListener('click', (e) => {
-        const el = e.target;
-        if (el.dataset.reload) {
-            const key = el.dataset.reload;
-            const script = scripts.find(s => s.key === key);
-            if (script) {
-                loadScript(script, true);
-            }
-        }
-    });
-
-    // Reaplicar scripts marcados
-    scripts.forEach(s => {
-        if (savedState[s.key]) {
-            loadScript(s);
-        }
-    });
-
-    render();
 })();
