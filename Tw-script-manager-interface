@@ -88,7 +88,7 @@
     toggleBtn.className = 'quest';
     toggleBtn.id = 'tw_toggle_interface';
     toggleBtn.title = 'Abrir Script Manager';
-    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings2.png)';
+    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
     toggleBtn.style.cursor = 'pointer';
     document.getElementById('questlog_new')?.appendChild(toggleBtn);
 
