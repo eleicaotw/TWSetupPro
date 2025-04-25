@@ -1,151 +1,31 @@
 (function () {
     'use strict';
 
-    // Armazenamento e estrutura inicial
-const STORAGE_KEY = 'tw_script_manager_state_v4';
-const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-const userScripts = saved.scripts || [];
+    // Criar botão
+    const toggleBtn = document.createElement('div');
+    toggleBtn.className = 'quest';
+    toggleBtn.title = 'Abrir Script Manager';
+    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
+    toggleBtn.style.cursor = 'pointer';
 
-const themes = {
-    claro: '#f4e4bc',
-    escuro: '#2b2b2b',
-    tribal: '#e7d9b2',
-    neutro: '#dcdcdc'
-};
-
-const categoriasPadrao = {
-    ataque: '⚔️ Ataque',
-    defesa: '🛡️ Defesa',
-    organizacao: '🧩 Organização',
-    forum: '📋 Fórum'
-};
-
-let categoriaAberta = {};
-
-const painel = document.createElement('div');
-painel.id = 'tw_script_manager';
-painel.style = 'position:fixed;top:120px;left:20px;z-index:9999;padding:10px;border:2px solid #c4a300;font-family:Verdana;border-radius:12px;box-shadow:2px 2px 8px #0006;';
-painel.style.background = themes[saved.tema || 'claro'];
-
-const toggleBtn = document.createElement('div');
-toggleBtn.className = 'quest';
-toggleBtn.title = 'Abrir Script Manager';
-toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
-toggleBtn.style.cursor = 'pointer';
-document.getElementById('questlog_new')?.appendChild(toggleBtn);
-
-toggleBtn.onclick = () => {
-    painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
-};
-
-const render = () => {
-    painel.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-        <b>Script Manager</b>
-        <select id="tema_select">${Object.keys(themes).map(k => `<option value="${k}" ${k === (saved.tema || 'claro') ? 'selected' : ''}>${k}</option>`)}</select>
-    </div>
-    <input type="text" id="filtro_scripts" placeholder="Buscar por nome ou categoria" style="margin:6px 0;width:100%;">
-    <div id="area_scripts" style="max-height:300px;overflow:auto;"></div>
-    <details style="margin-top:10px;">
-        <summary>➕ Adicionar novo script</summary>
-        <input id="novo_nome" placeholder="Nome" style="width:100%;margin-top:4px;">
-        <input id="novo_url" placeholder="URL .js" style="width:100%;margin-top:4px;">
-        <input id="novo_categoria" placeholder="Categoria" style="width:100%;margin-top:4px;">
-        <input id="novo_emoji" placeholder="Emoji (🔧)" style="width:100%;margin-top:4px;">
-        <button id="adicionar_script" style="margin-top:5px;width:100%;">Adicionar</button>
-    </details>
-    <div id="log_script" style="margin-top:5px;font-size:11px;color:green;"></div>
-    `;
+    // Painel que será controlado
+    const painel = document.createElement('div');
+    painel.id = 'tw_script_manager';
+    painel.style = 'position:fixed;top:120px;left:20px;z-index:9999;padding:10px;background:#f4e4bc;border:2px solid #c4a300;border-radius:12px;display:none;';
+    painel.innerHTML = '<b>Script Manager v4</b><br><i>Interface carregada corretamente.</i>';
     document.body.appendChild(painel);
-    carregarScripts(userScripts);
-};
 
-const carregarScripts = (lista) => {
-    const area = document.getElementById('area_scripts');
-    const filtro = document.getElementById('filtro_scripts').value.toLowerCase();
-    area.innerHTML = '';
-    const porCategoria = {};
+    toggleBtn.onclick = () => {
+        painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
+    };
 
-    lista.forEach(s => {
-        if (!porCategoria[s.categoria]) porCategoria[s.categoria] = [];
-        porCategoria[s.categoria].push(s);
-    });
-
-    Object.entries(porCategoria).forEach(([categoria, scripts]) => {
-        const container = document.createElement('div');
-        const header = document.createElement('div');
-        header.style = 'font-weight:bold;margin-top:8px;cursor:pointer;';
-        const aberta = categoriaAberta[categoria] ?? true;
-        header.innerHTML = `${aberta ? '▼' : '►'} ${categoriasPadrao[categoria] || categoria}`;
-        header.onclick = () => {
-            categoriaAberta[categoria] = !categoriaAberta[categoria];
-            render();
-        };
-        container.appendChild(header);
-
-        if (aberta) {
-            scripts.forEach(s => {
-                if (filtro && !s.nome.toLowerCase().includes(filtro) && !s.categoria.toLowerCase().includes(filtro)) return;
-                const linha = document.createElement('div');
-                linha.title = s.url;
-                linha.innerHTML = `
-                    ${s.emoji || '📜'} ${s.nome}
-                    <button data-url="${s.url}" style="float:right">🔄</button>
-                `;
-                const btn = linha.querySelector('button');
-                btn.onclick = () => executarScript(s.url, s.nome);
-                container.appendChild(linha);
-            });
+    // Aguarda a interface do jogo
+    window.addEventListener('load', () => {
+        const questlog = document.getElementById('questlog_new');
+        if (questlog) {
+            questlog.appendChild(toggleBtn);
+        } else {
+            console.warn('Elemento #questlog_new não encontrado.');
         }
-
-        area.appendChild(container);
     });
-};
-
-const executarScript = (url, nome) => {
-    fetch(url)
-        .then(res => res.text())
-        .then(code => {
-            eval(code);
-            log(`${nome} carregado ✔️`);
-        })
-        .catch(() => log(`${nome} falhou ao carregar ❌`, true));
-};
-
-const log = (msg, erro = false) => {
-    const el = document.getElementById('log_script');
-    const hora = new Date().toLocaleTimeString();
-    el.style.color = erro ? 'red' : 'green';
-    el.textContent = `[${hora}] ${msg}`;
-};
-
-document.addEventListener('change', e => {
-    if (e.target.id === 'tema_select') {
-        const t = e.target.value;
-        painel.style.background = themes[t];
-        saved.tema = t;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-    }
-    if (e.target.id === 'filtro_scripts') carregarScripts(userScripts);
-});
-
-document.addEventListener('click', e => {
-    if (e.target.id === 'adicionar_script') {
-        const nome = document.getElementById('novo_nome').value.trim();
-        const url = document.getElementById('novo_url').value.trim();
-        const cat = document.getElementById('novo_categoria').value.trim().toLowerCase();
-        const emoji = document.getElementById('novo_emoji').value.trim();
-        if (!nome || !url) return log('Preencha nome e URL.', true);
-        const novo = { nome, url, categoria: cat || 'outros', emoji: emoji || '📜' };
-        userScripts.push(novo);
-        saved.scripts = userScripts;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-        render();
-        log(`${nome} adicionado.`);
-    }
-});
-
-// Inicializa
-render();
-})(); """
-
+})();
