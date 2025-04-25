@@ -1,44 +1,44 @@
 (function () {
     'use strict';
 
+    const STORAGE_KEY = 'tw_script_manager_state';
+    const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
     const scripts = [
         {
             name: 'Conversor Defesa POP',
-            active: false,
-            run: () => {
-                if (document.getElementById('twWrapper')) return;
-                fetch('https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js')
-                    .then(res => res.text())
-                    .then(code => eval(code))
-                    .catch(err => alert('Erro ao carregar Conversor Defesa POP: ' + err));
-            }
+            key: 'conversor',
+            icon: '🛡️',
+            tooltip: 'Converter tropas em código de defesa BB',
+            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js'
         },
         {
             name: 'MP OP Auto',
-            active: false,
-            run: () => {
-                if (document.getElementById('mpopauto_interface')) return;
-                fetch('https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js')
-                    .then(res => res.text())
-                    .then(code => eval(code))
-                    .catch(err => alert('Erro ao carregar MP OP Auto: ' + err));
-            }
+            key: 'mpop',
+            icon: '📨',
+            tooltip: 'Automatizar envio de MPs em OPs',
+            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js'
         }
     ];
 
     const painel = document.createElement('div');
-    painel.style = 'position: fixed; top: 100px; left: 20px; z-index: 9999; background: #f4e4bc; padding: 10px; border: 2px solid #c4a300; font-family: Verdana;';
-    painel.innerHTML = `<b>Menu de Scripts</b><br><table><thead><tr><th style="text-align:left">Script</th><th>Ativar</th></tr></thead><tbody id="lista_scripts"></tbody></table>`;
+    painel.style = 'position: fixed; top: 100px; left: 20px; z-index: 9999; background: #f4e4bc; padding: 10px; border: 2px solid #c4a300; font-family: Verdana; border-radius: 12px; box-shadow: 2px 2px 8px #0006;';
+    painel.innerHTML = `<b>Menu de Scripts</b><br>
+        <table style="margin-top: 6px;">
+            <thead><tr><th style="text-align:left">Script</th><th>Ativar</th></tr></thead>
+            <tbody id="lista_scripts"></tbody>
+        </table>
+        <div id="tw_script_log" style="margin-top: 10px; font-size: 11px; color: green;"></div>`;
     painel.id = 'tw_script_manager_painel';
     painel.style.display = 'none';
     document.body.appendChild(painel);
 
-    // Botão com ícone de engrenagem para abrir a interface
+    // Botão no estilo missões com engrenagem
     const toggleBtn = document.createElement('div');
     toggleBtn.className = 'quest';
     toggleBtn.id = 'tw_toggle_interface';
     toggleBtn.title = 'Abrir Script Manager';
-    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
+    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings2.png)';
     toggleBtn.style.cursor = 'pointer';
 
     toggleBtn.onclick = () => {
@@ -46,34 +46,58 @@
         painel.style.display = isVisible ? 'none' : 'block';
     };
 
-    // Inserir o botão dentro da barra de missões
     const questlog = document.getElementById('questlog_new');
-    if (questlog) {
-        questlog.appendChild(toggleBtn);
-    }
+    if (questlog) questlog.appendChild(toggleBtn);
 
     const lista = document.getElementById('lista_scripts');
+    const log = document.getElementById('tw_script_log');
 
-    scripts.forEach((s, i) => {
+    const addLog = (msg) => {
+        const time = new Date().toLocaleTimeString();
+        log.textContent = `[${time}] ${msg}`;
+    };
+
+    scripts.forEach(script => {
         const tr = document.createElement('tr');
-        const nome = document.createElement('td');
-        nome.textContent = s.name;
+        const tdName = document.createElement('td');
+        tdName.innerHTML = `${script.icon} ${script.name}`;
+        tdName.title = script.tooltip;
 
-        const toggle = document.createElement('input');
-        toggle.type = 'checkbox';
-        toggle.onchange = () => {
-            if (toggle.checked) {
-                s.active = true;
-                s.run();
+        const tdToggle = document.createElement('td');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = !!savedState[script.key];
+
+        checkbox.onchange = () => {
+            if (checkbox.checked) {
+                fetch(script.url)
+                    .then(res => res.text())
+                    .then(code => {
+                        eval(code);
+                        savedState[script.key] = true;
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+                        addLog(`${script.name} carregado`);
+                    })
+                    .catch(err => alert(`Erro ao carregar ${script.name}: ${err}`));
             } else {
-                location.reload();
+                savedState[script.key] = false;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+                addLog(`${script.name} desativado (recarregue para remover efeitos)`);
             }
         };
 
-        const tdToggle = document.createElement('td');
-        tdToggle.appendChild(toggle);
+        // Autoexecução se estiver salvo como ativo
+        if (checkbox.checked) {
+            fetch(script.url)
+                .then(res => res.text())
+                .then(code => {
+                    eval(code);
+                    addLog(`${script.name} reativado`);
+                });
+        }
 
-        tr.appendChild(nome);
+        tdToggle.appendChild(checkbox);
+        tr.appendChild(tdName);
         tr.appendChild(tdToggle);
         lista.appendChild(tr);
     });
