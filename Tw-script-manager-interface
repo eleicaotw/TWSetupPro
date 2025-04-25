@@ -38,7 +38,7 @@
             left: 20px;
             z-index: 9999;
             background: #f4e4bc;
-            padding: 10px;
+            padding: 15px;
             border: 2px solid #c4a300;
             font-family: Verdana;
             border-radius: 12px;
@@ -61,10 +61,26 @@
         .tw_script_category {
             font-weight: bold;
             padding-top: 8px;
+            background-color: #f1f1f1;
+            padding: 5px;
+            border-radius: 6px;
+            margin-bottom: 5px;
         }
         .tw_script_action {
-            margin-left: 4px;
+            margin-left: 5px;
             cursor: pointer;
+        }
+        .tw_script_toggle {
+            cursor: pointer;
+            padding: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .tw_script_toggle_off {
+            background-color: #dc3545;
         }
         #tw_script_manager_painel.dragging {
             opacity: 0.7;
@@ -77,7 +93,7 @@
     painel.style.display = 'none';
     painel.innerHTML = `
         <b>Menu de Scripts</b><br>
-        <button id="update_scripts_button" style="margin:10px;">Atualizar Scripts</button>
+        <button id="update_scripts_button" style="margin:10px;width:100%; padding:8px;background-color:#28a745;color:#fff;border-radius:5px;">Atualizar Scripts</button>
         <div id="lista_scripts" style="margin-top:5px;"></div>
         <div id="tw_script_log" style="color: green;"></div>
     `;
@@ -126,7 +142,9 @@
                 div.innerHTML = `
                     ${script.icon} ${script.name}
                     ${ativo ? '<span class="tw_script_loaded">✔️</span>' : ''}
-                    <input type="checkbox" ${ativo ? 'checked' : ''} data-key="${script.key}" style="margin-left:5px">
+                    <span class="tw_script_toggle ${ativo ? '' : 'tw_script_toggle_off'}" data-key="${script.key}">
+                        ${ativo ? 'Desativar' : 'Ativar'}
+                    </span>
                     <span class="tw_script_action" data-reload="${script.key}" title="Recarregar">🔄</span>
                 `;
                 container.appendChild(div);
@@ -164,6 +182,19 @@
             const script = scripts.find(s => s.key === key);
             if (script) {
                 loadScript(script, true);
+            }
+        }
+
+        if (el.classList.contains('tw_script_toggle')) {
+            const key = el.dataset.key;
+            const script = scripts.find(s => s.key === key);
+            if (script) {
+                const ativo = savedState[script.key] = !savedState[script.key];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+                render();
+                if (ativo) {
+                    loadScript(script);
+                }
             }
         }
     });
