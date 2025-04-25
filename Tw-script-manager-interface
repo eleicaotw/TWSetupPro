@@ -147,4 +147,5 @@ document.addEventListener('click', e => {
 
 // Inicializa
 render();
+})(); """
 
