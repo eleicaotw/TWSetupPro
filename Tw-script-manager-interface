@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
 
@@ -91,14 +90,7 @@
     toggleBtn.title = 'Abrir Script Manager';
     toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
     toggleBtn.style.cursor = 'pointer';
-    toggleBtn.style.position = 'fixed';
-    toggleBtn.style.top = '150px';
-    toggleBtn.style.left = '20px';
-    toggleBtn.style.zIndex = '10000';
-    toggleBtn.style.width = '32px';
-    toggleBtn.style.height = '32px';
-    toggleBtn.style.backgroundSize = 'cover';
-    document.body.appendChild(toggleBtn);
+    document.getElementById('questlog_new')?.appendChild(toggleBtn);
 
     toggleBtn.onclick = () => {
         painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
@@ -194,6 +186,24 @@
         if (savedState[s.key]) {
             loadScript(s);
         }
+    });
+
+    // Arrastar painel
+    let offset = null;
+    painel.addEventListener('mousedown', e => {
+        if (e.target.id === 'tw_script_manager_painel') {
+            offset = [e.clientX - painel.offsetLeft, e.clientY - painel.offsetTop];
+            painel.classList.add('dragging');
+        }
+    });
+    document.addEventListener('mousemove', e => {
+        if (!offset) return;
+        painel.style.left = `${e.clientX - offset[0]}px`;
+        painel.style.top = `${e.clientY - offset[1]}px`;
+    });
+    document.addEventListener('mouseup', () => {
+        offset = null;
+        painel.classList.remove('dragging');
     });
 
     render();
