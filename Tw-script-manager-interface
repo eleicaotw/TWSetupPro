@@ -27,28 +27,30 @@
     ];
 
     const painel = document.createElement('div');
-    painel.style = 'position: fixed; top: 40px; left: 20px; z-index: 9999; background: #f4e4bc; padding: 10px; border: 2px solid #c4a300; font-family: Verdana;';
+    painel.style = 'position: fixed; top: 100px; left: 20px; z-index: 9999; background: #f4e4bc; padding: 10px; border: 2px solid #c4a300; font-family: Verdana;';
     painel.innerHTML = `<b>Menu de Scripts</b><br><table><thead><tr><th style="text-align:left">Script</th><th>Ativar</th></tr></thead><tbody id="lista_scripts"></tbody></table>`;
+    painel.id = 'tw_script_manager_painel';
+    painel.style.display = 'none';
+    document.body.appendChild(painel);
+
+    // Botão com ícone de engrenagem para abrir a interface
     const toggleBtn = document.createElement('div');
-toggleBtn.className = 'questlog';
-toggleBtn.id = 'tw_toggle_interface';
-toggleBtn.innerHTML = '<div class="quest" style="cursor:pointer"></div>';
-toggleBtn.style.position = 'absolute';
-toggleBtn.style.top = '112px';
-toggleBtn.style.left = '10px';
-toggleBtn.style.zIndex = '50';
-toggleBtn.style.width = '32px';
-toggleBtn.style.height = '32px';
-toggleBtn.style.background = 'url(/graphic//questlog/questlog_open.png) no-repeat center';
-toggleBtn.style.backgroundSize = 'cover';
-document.querySelector('#questlog_new')?.after(toggleBtn);
-toggleBtn.onclick = () => {
-    const visible = painel.style.display !== 'none';
-    painel.style.display = visible ? 'none' : 'block';
-};
-painel.style.display = 'none';
-painel.id = 'tw_script_manager_painel';
-document.body.appendChild(painel);
+    toggleBtn.className = 'quest';
+    toggleBtn.id = 'tw_toggle_interface';
+    toggleBtn.title = 'Abrir Script Manager';
+    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
+    toggleBtn.style.cursor = 'pointer';
+
+    toggleBtn.onclick = () => {
+        const isVisible = painel.style.display !== 'none';
+        painel.style.display = isVisible ? 'none' : 'block';
+    };
+
+    // Inserir o botão dentro da barra de missões
+    const questlog = document.getElementById('questlog_new');
+    if (questlog) {
+        questlog.appendChild(toggleBtn);
+    }
 
     const lista = document.getElementById('lista_scripts');
 
