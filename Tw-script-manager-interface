@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
 
@@ -38,7 +37,7 @@
             left: 20px;
             z-index: 9999;
             background: #f4e4bc;
-            padding: 15px;
+            padding: 10px;
             border: 2px solid #c4a300;
             font-family: Verdana;
             border-radius: 12px;
@@ -61,26 +60,10 @@
         .tw_script_category {
             font-weight: bold;
             padding-top: 8px;
-            background-color: #f1f1f1;
-            padding: 5px;
-            border-radius: 6px;
-            margin-bottom: 5px;
         }
         .tw_script_action {
-            margin-left: 5px;
+            margin-left: 4px;
             cursor: pointer;
-        }
-        .tw_script_toggle {
-            cursor: pointer;
-            padding: 5px;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 4px;
-            margin-top: 5px;
-            display: inline-block;
-        }
-        .tw_script_toggle_off {
-            background-color: #dc3545;
         }
         #tw_script_manager_painel.dragging {
             opacity: 0.7;
@@ -92,8 +75,9 @@
     painel.id = 'tw_script_manager_painel';
     painel.style.display = 'none';
     painel.innerHTML = `
-        <b>Menu de Scripts</b><br>
-        <button id="update_scripts_button" style="margin:10px;width:100%; padding:8px;background-color:#28a745;color:#fff;border-radius:5px;">Atualizar Scripts</button>
+        <b>Menu de Scripts</b>
+        <label style="float:right;font-size:11px;"><input type="checkbox" id="toggle_escuro"> 🌙 Escuro</label><br style="clear:both">
+        <label style="font-size:11px;"><input type="checkbox" id="ocultar_desativados"> Ocultar desativados</label>
         <div id="lista_scripts" style="margin-top:5px;"></div>
         <div id="tw_script_log" style="color: green;"></div>
     `;
@@ -119,12 +103,12 @@
         log.innerHTML = `<span style="color:${color}">[${time}] ${msg}</span>`;
     };
 
-    // Função para carregar scripts com categorias
+    // Monta lista de scripts com categorias
     const container = document.getElementById('lista_scripts');
 
     const render = () => {
         container.innerHTML = '';
-        const ocultar = false;  // Não ocultar desativados para o teste de layout
+        const ocultar = document.getElementById('ocultar_desativados').checked;
 
         Object.keys(categories).forEach(cat => {
             const group = scripts.filter(s => s.categoria === cat);
@@ -137,32 +121,18 @@
 
             group.forEach(script => {
                 const ativo = savedState[script.key];
+                if (ocultar && !ativo) return;
+
                 const div = document.createElement('div');
                 div.title = script.tooltip;
-
-                // Ajustando para que scripts desativados desapareçam da tela
-                if (!ativo) {
-                    div.style.display = 'none'; // Desaparece quando desativado
-                }
-
                 div.innerHTML = `
                     ${script.icon} ${script.name}
                     ${ativo ? '<span class="tw_script_loaded">✔️</span>' : ''}
-                    <span class="tw_script_toggle ${ativo ? '' : 'tw_script_toggle_off'}" data-key="${script.key}">
-                        ${ativo ? 'Desativar' : 'Ativar'}
-                    </span>
+                    <input type="checkbox" ${ativo ? 'checked' : ''} data-key="${script.key}" style="margin-left:5px">
                     <span class="tw_script_action" data-reload="${script.key}" title="Recarregar">🔄</span>
                 `;
                 container.appendChild(div);
             });
-        });
-    };
-
-    // Função para atualizar todos os scripts
-    const updateScripts = () => {
-        addLog('Atualizando scripts...');
-        scripts.forEach(script => {
-            loadScript(script, true);
         });
     };
 
@@ -178,29 +148,35 @@
     };
 
     // Eventos
+    painel.addEventListener('change', (e) => {
+        const el = e.target;
+        if (el.id === 'toggle_escuro') {
+            painel.classList.toggle('dark', el.checked);
+            return;
+        }
+        if (el.id === 'ocultar_desativados') {
+            render();
+            return;
+        }
+        if (el.type === 'checkbox' && el.dataset.key) {
+            const key = el.dataset.key;
+            savedState[key] = el.checked;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+            render();
+            if (el.checked) {
+                const script = scripts.find(s => s.key === key);
+                if (script) loadScript(script);
+            }
+        }
+    });
+
     painel.addEventListener('click', (e) => {
         const el = e.target;
-        if (el.id === 'update_scripts_button') {
-            updateScripts();
-        }
         if (el.dataset.reload) {
             const key = el.dataset.reload;
             const script = scripts.find(s => s.key === key);
             if (script) {
                 loadScript(script, true);
-            }
-        }
-
-        if (el.classList.contains('tw_script_toggle')) {
-            const key = el.dataset.key;
-            const script = scripts.find(s => s.key === key);
-            if (script) {
-                const ativo = savedState[script.key] = !savedState[script.key];
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-                render();
-                if (ativo) {
-                    loadScript(script);
-                }
             }
         }
     });
@@ -210,6 +186,24 @@
         if (savedState[s.key]) {
             loadScript(s);
         }
+    });
+
+    // Arrastar painel
+    let offset = null;
+    painel.addEventListener('mousedown', e => {
+        if (e.target.id === 'tw_script_manager_painel') {
+            offset = [e.clientX - painel.offsetLeft, e.clientY - painel.offsetTop];
+            painel.classList.add('dragging');
+        }
+    });
+    document.addEventListener('mousemove', e => {
+        if (!offset) return;
+        painel.style.left = `${e.clientX - offset[0]}px`;
+        painel.style.top = `${e.clientY - offset[1]}px`;
+    });
+    document.addEventListener('mouseup', () => {
+        offset = null;
+        painel.classList.remove('dragging');
     });
 
     render();
