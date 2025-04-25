@@ -1,8 +1,14 @@
 (function () {
     'use strict';
 
-    const STORAGE_KEY = 'tw_script_manager_state';
+    const STORAGE_KEY = 'tw_script_manager_state_v2';
     const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+    const categories = {
+        ataque: '⚔️ Ataque',
+        defesa: '🛡️ Defesa',
+        organizacao: '🧩 Organização'
+    };
 
     const scripts = [
         {
@@ -10,95 +16,195 @@
             key: 'conversor',
             icon: '🛡️',
             tooltip: 'Converter tropas em código de defesa BB',
-            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js'
+            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js',
+            categoria: 'defesa'
         },
         {
             name: 'MP OP Auto',
             key: 'mpop',
             icon: '📨',
             tooltip: 'Automatizar envio de MPs em OPs',
-            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js'
+            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js',
+            categoria: 'organizacao'
         }
     ];
 
+    const style = document.createElement('style');
+    style.textContent = `
+        #tw_script_manager_painel {
+            position: fixed;
+            top: 120px;
+            left: 20px;
+            z-index: 9999;
+            background: #f4e4bc;
+            padding: 10px;
+            border: 2px solid #c4a300;
+            font-family: Verdana;
+            border-radius: 12px;
+            box-shadow: 2px 2px 8px #0006;
+            transition: opacity 0.3s ease;
+        }
+        #tw_script_manager_painel.dark {
+            background: #2b2b2b;
+            color: #f0f0f0;
+            border: 2px solid #888;
+        }
+        #tw_script_log {
+            margin-top: 10px;
+            font-size: 11px;
+        }
+        .tw_script_loaded {
+            color: green;
+            font-weight: bold;
+        }
+        .tw_script_category {
+            font-weight: bold;
+            padding-top: 8px;
+        }
+        .tw_script_action {
+            margin-left: 4px;
+            cursor: pointer;
+        }
+        #tw_script_manager_painel.dragging {
+            opacity: 0.7;
+        }
+    `;
+    document.head.appendChild(style);
+
     const painel = document.createElement('div');
-    painel.style = 'position: fixed; top: 100px; left: 20px; z-index: 9999; background: #f4e4bc; padding: 10px; border: 2px solid #c4a300; font-family: Verdana; border-radius: 12px; box-shadow: 2px 2px 8px #0006;';
-    painel.innerHTML = `<b>Menu de Scripts</b><br>
-        <table style="margin-top: 6px;">
-            <thead><tr><th style="text-align:left">Script</th><th>Ativar</th></tr></thead>
-            <tbody id="lista_scripts"></tbody>
-        </table>
-        <div id="tw_script_log" style="margin-top: 10px; font-size: 11px; color: green;"></div>`;
     painel.id = 'tw_script_manager_painel';
     painel.style.display = 'none';
+    painel.innerHTML = `
+        <b>Menu de Scripts</b>
+        <label style="float:right;font-size:11px;"><input type="checkbox" id="toggle_escuro"> 🌙 Escuro</label><br style="clear:both">
+        <label style="font-size:11px;"><input type="checkbox" id="ocultar_desativados"> Ocultar desativados</label>
+        <div id="lista_scripts" style="margin-top:5px;"></div>
+        <div id="tw_script_log" style="color: green;"></div>
+    `;
     document.body.appendChild(painel);
 
-    // Botão no estilo missões com engrenagem
+    // Engrenagem (botão flutuante)
     const toggleBtn = document.createElement('div');
     toggleBtn.className = 'quest';
     toggleBtn.id = 'tw_toggle_interface';
     toggleBtn.title = 'Abrir Script Manager';
     toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings2.png)';
     toggleBtn.style.cursor = 'pointer';
+    document.getElementById('questlog_new')?.appendChild(toggleBtn);
 
     toggleBtn.onclick = () => {
-        const isVisible = painel.style.display !== 'none';
-        painel.style.display = isVisible ? 'none' : 'block';
+        painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
     };
 
-    const questlog = document.getElementById('questlog_new');
-    if (questlog) questlog.appendChild(toggleBtn);
-
-    const lista = document.getElementById('lista_scripts');
+    // Mini log
     const log = document.getElementById('tw_script_log');
-
-    const addLog = (msg) => {
+    const addLog = (msg, color = 'green') => {
         const time = new Date().toLocaleTimeString();
-        log.textContent = `[${time}] ${msg}`;
+        log.innerHTML = `<span style="color:${color}">[${time}] ${msg}</span>`;
     };
 
-    scripts.forEach(script => {
-        const tr = document.createElement('tr');
-        const tdName = document.createElement('td');
-        tdName.innerHTML = `${script.icon} ${script.name}`;
-        tdName.title = script.tooltip;
+    // Monta lista de scripts com categorias
+    const container = document.getElementById('lista_scripts');
 
-        const tdToggle = document.createElement('td');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = !!savedState[script.key];
+    const render = () => {
+        container.innerHTML = '';
+        const ocultar = document.getElementById('ocultar_desativados').checked;
 
-        checkbox.onchange = () => {
-            if (checkbox.checked) {
-                fetch(script.url)
-                    .then(res => res.text())
-                    .then(code => {
-                        eval(code);
-                        savedState[script.key] = true;
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-                        addLog(`${script.name} carregado`);
-                    })
-                    .catch(err => alert(`Erro ao carregar ${script.name}: ${err}`));
-            } else {
-                savedState[script.key] = false;
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-                addLog(`${script.name} desativado (recarregue para remover efeitos)`);
-            }
-        };
+        Object.keys(categories).forEach(cat => {
+            const group = scripts.filter(s => s.categoria === cat);
+            if (group.length === 0) return;
 
-        // Autoexecução se estiver salvo como ativo
-        if (checkbox.checked) {
-            fetch(script.url)
-                .then(res => res.text())
-                .then(code => {
-                    eval(code);
-                    addLog(`${script.name} reativado`);
-                });
+            const catDiv = document.createElement('div');
+            catDiv.className = 'tw_script_category';
+            catDiv.textContent = categories[cat];
+            container.appendChild(catDiv);
+
+            group.forEach(script => {
+                const ativo = savedState[script.key];
+                if (ocultar && !ativo) return;
+
+                const div = document.createElement('div');
+                div.title = script.tooltip;
+                div.innerHTML = `
+                    ${script.icon} ${script.name}
+                    ${ativo ? '<span class="tw_script_loaded">✔️</span>' : ''}
+                    <input type="checkbox" ${ativo ? 'checked' : ''} data-key="${script.key}" style="margin-left:5px">
+                    <span class="tw_script_action" data-reload="${script.key}" title="Recarregar">🔄</span>
+                `;
+                container.appendChild(div);
+            });
+        });
+    };
+
+    const loadScript = (script, force = false) => {
+        if (document.getElementById(`tw_script_${script.key}`) && !force) return;
+        fetch(script.url)
+            .then(res => res.text())
+            .then(code => {
+                eval(code);
+                addLog(`${script.name} carregado`);
+            })
+            .catch(err => addLog(`Erro ao carregar ${script.name}: ${err}`, 'red'));
+    };
+
+    // Eventos
+    painel.addEventListener('change', (e) => {
+        const el = e.target;
+        if (el.id === 'toggle_escuro') {
+            painel.classList.toggle('dark', el.checked);
+            return;
         }
-
-        tdToggle.appendChild(checkbox);
-        tr.appendChild(tdName);
-        tr.appendChild(tdToggle);
-        lista.appendChild(tr);
+        if (el.id === 'ocultar_desativados') {
+            render();
+            return;
+        }
+        if (el.type === 'checkbox' && el.dataset.key) {
+            const key = el.dataset.key;
+            savedState[key] = el.checked;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+            render();
+            if (el.checked) {
+                const script = scripts.find(s => s.key === key);
+                if (script) loadScript(script);
+            }
+        }
     });
+
+    painel.addEventListener('click', (e) => {
+        const el = e.target;
+        if (el.dataset.reload) {
+            const key = el.dataset.reload;
+            const script = scripts.find(s => s.key === key);
+            if (script) {
+                loadScript(script, true);
+            }
+        }
+    });
+
+    // Reaplicar scripts marcados
+    scripts.forEach(s => {
+        if (savedState[s.key]) {
+            loadScript(s);
+        }
+    });
+
+    // Arrastar painel
+    let offset = null;
+    painel.addEventListener('mousedown', e => {
+        if (e.target.id === 'tw_script_manager_painel') {
+            offset = [e.clientX - painel.offsetLeft, e.clientY - painel.offsetTop];
+            painel.classList.add('dragging');
+        }
+    });
+    document.addEventListener('mousemove', e => {
+        if (!offset) return;
+        painel.style.left = `${e.clientX - offset[0]}px`;
+        painel.style.top = `${e.clientY - offset[1]}px`;
+    });
+    document.addEventListener('mouseup', () => {
+        offset = null;
+        painel.classList.remove('dragging');
+    });
+
+    render();
 })();
