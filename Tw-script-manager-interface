@@ -139,6 +139,12 @@
                 const ativo = savedState[script.key];
                 const div = document.createElement('div');
                 div.title = script.tooltip;
+
+                // Ajustando para que scripts desativados desapareçam da tela
+                if (!ativo) {
+                    div.style.display = 'none'; // Desaparece quando desativado
+                }
+
                 div.innerHTML = `
                     ${script.icon} ${script.name}
                     ${ativo ? '<span class="tw_script_loaded">✔️</span>' : ''}
