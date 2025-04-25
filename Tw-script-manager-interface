@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    const STORAGE_KEY = 'tw_script_manager_state_v3';
+    const STORAGE_KEY = 'tw_script_manager_state_v2';
     const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 
     const categories = {
