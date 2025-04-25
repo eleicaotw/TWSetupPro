@@ -77,6 +77,7 @@
     painel.style.display = 'none';
     painel.innerHTML = `
         <b>Menu de Scripts</b><br>
+        <button id="update_scripts_button" style="margin:10px;">Atualizar Scripts</button>
         <div id="lista_scripts" style="margin-top:5px;"></div>
         <div id="tw_script_log" style="color: green;"></div>
     `;
@@ -102,7 +103,7 @@
         log.innerHTML = `<span style="color:${color}">[${time}] ${msg}</span>`;
     };
 
-    // Monta lista de scripts com categorias
+    // Função para carregar scripts com categorias
     const container = document.getElementById('lista_scripts');
 
     const render = () => {
@@ -133,6 +134,14 @@
         });
     };
 
+    // Função para atualizar todos os scripts
+    const updateScripts = () => {
+        addLog('Atualizando scripts...');
+        scripts.forEach(script => {
+            loadScript(script, true);
+        });
+    };
+
     const loadScript = (script, force = false) => {
         if (document.getElementById(`tw_script_${script.key}`) && !force) return;
         fetch(script.url)
@@ -145,26 +154,11 @@
     };
 
     // Eventos
-    painel.addEventListener('change', (e) => {
-        const el = e.target;
-        if (el.id === 'toggle_escuro') {
-            painel.classList.toggle('dark', el.checked);
-            return;
-        }
-        if (el.type === 'checkbox' && el.dataset.key) {
-            const key = el.dataset.key;
-            savedState[key] = el.checked;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-            render();
-            if (el.checked) {
-                const script = scripts.find(s => s.key === key);
-                if (script) loadScript(script);
-            }
-        }
-    });
-
     painel.addEventListener('click', (e) => {
         const el = e.target;
+        if (el.id === 'update_scripts_button') {
+            updateScripts();
+        }
         if (el.dataset.reload) {
             const key = el.dataset.reload;
             const script = scripts.find(s => s.key === key);
@@ -179,24 +173,6 @@
         if (savedState[s.key]) {
             loadScript(s);
         }
-    });
-
-    // Arrastar painel
-    let offset = null;
-    painel.addEventListener('mousedown', e => {
-        if (e.target.id === 'tw_script_manager_painel') {
-            offset = [e.clientX - painel.offsetLeft, e.clientY - painel.offsetTop];
-            painel.classList.add('dragging');
-        }
-    });
-    document.addEventListener('mousemove', e => {
-        if (!offset) return;
-        painel.style.left = `${e.clientX - offset[0]}px`;
-        painel.style.top = `${e.clientY - offset[1]}px`;
-    });
-    document.addEventListener('mouseup', () => {
-        offset = null;
-        painel.classList.remove('dragging');
     });
 
     render();
