@@ -1,76 +1,199 @@
-
 (function () {
     'use strict';
 
-    // Verifica se estamos na página correta (screen=mail)
-    if (window.location.href.indexOf("screen=mail") === -1) {
-        return;  // Não executa se não estiver em screen=mail
-    }
-
-    const STORAGE_KEY = 'mp_op_auto_state_v2';
+    const STORAGE_KEY = 'tw_script_manager_state_v2';
     const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 
-    const config = {
-        assunto: "OP - SEU ALVO",
-        data: "",
-        hora: "",
-        coordenadasJogador: [],
-        fakes: [],
-        dividirIgualmente: false,
-        fakesPorJogador: ""
+    const categories = {
+        ataque: '⚔️ Ataque',
+        defesa: '🛡️ Defesa',
+        organizacao: '🧩 Organização'
     };
 
-    // Função para atualizar a configuração
-    const updateConfig = () => {
-        // Atualiza a configuração de fakes, se necessário
-        config.fakes = document.getElementById('fakes').value.split('
-').map(item => item.trim());
-        config.coordenadasJogador = document.getElementById('coordenadasJogador').value.split('
-').map(item => item.trim());
-        config.dividirIgualmente = document.querySelector('input[name="dividirIgualmente"]:checked').value === 'sim';
-        config.fakesPorJogador = document.getElementById('fakesPorJogador').value;
-        // Salva as configurações no localStorage
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-    };
-
-    // Função para enviar os MPs
-    const enviarMP = () => {
-        updateConfig();  // Atualiza as configurações antes de enviar
-
-        const jogadores = config.coordenadasJogador;
-        const fakes = config.fakes;
-        const dividirFakes = config.dividirIgualmente;
-
-        // Lógica para dividir fakes, caso necessário
-        let fakesPorJogador = dividirFakes ? Math.ceil(fakes.length / jogadores.length) : fakes.length;
-        
-        for (let i = 0; i < jogadores.length; i++) {
-            const jogador = jogadores[i];
-            const fakesParaEnviar = fakes.slice(i * fakesPorJogador, (i + 1) * fakesPorJogador);
-
-            // Envia a MP para cada jogador
-            enviarMensagem(jogador, fakesParaEnviar);
+    const scripts = [
+        {
+            name: 'Conversor Defesa POP',
+            key: 'conversor',
+            icon: '🛠️',
+            tooltip: 'Converter tropas em código de defesa BB',
+            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js',
+            categoria: 'organizacao'
+        },
+        {
+            name: 'MP OP Auto',
+            key: 'mpop',
+            icon: '📨',
+            tooltip: 'Automatizar envio de MPs em OPs',
+            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js',
+            categoria: 'organizacao'
         }
+    ];
+
+    const style = document.createElement('style');
+    style.textContent = `
+        #tw_script_manager_painel {
+            position: fixed;
+            top: 120px;
+            left: 20px;
+            z-index: 9999;
+            background: #f4e4bc;
+            padding: 10px;
+            border: 2px solid #c4a300;
+            font-family: Verdana;
+            border-radius: 12px;
+            box-shadow: 2px 2px 8px #0006;
+            transition: opacity 0.3s ease;
+        }
+        #tw_script_manager_painel.dark {
+            background: #2b2b2b;
+            color: #f0f0f0;
+            border: 2px solid #888;
+        }
+        #tw_script_log {
+            margin-top: 10px;
+            font-size: 11px;
+        }
+        .tw_script_loaded {
+            color: green;
+            font-weight: bold;
+        }
+        .tw_script_category {
+            font-weight: bold;
+            padding-top: 8px;
+        }
+        .tw_script_action {
+            margin-left: 4px;
+            cursor: pointer;
+        }
+        #tw_script_manager_painel.dragging {
+            opacity: 0.7;
+        }
+    `;
+    document.head.appendChild(style);
+
+    const painel = document.createElement('div');
+    painel.id = 'tw_script_manager_painel';
+    painel.style.display = 'none';
+    painel.innerHTML = `
+        <b>Menu de Scripts</b>
+        <label style="float:right;font-size:11px;"><input type="checkbox" id="toggle_escuro"> 🌙 Escuro</label><br style="clear:both">
+        <label style="font-size:11px;"><input type="checkbox" id="ocultar_desativados"> Ocultar desativados</label>
+        <div id="lista_scripts" style="margin-top:5px;"></div>
+        <div id="tw_script_log" style="color: green;"></div>
+    `;
+    document.body.appendChild(painel);
+
+    // Engrenagem (botão flutuante)
+    const toggleBtn = document.createElement('div');
+    toggleBtn.className = 'quest';
+    toggleBtn.id = 'tw_toggle_interface';
+    toggleBtn.title = 'Abrir Script Manager';
+    toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
+    toggleBtn.style.cursor = 'pointer';
+    toggleBtn.style.position = 'fixed';
+    toggleBtn.style.top = '150px';
+    toggleBtn.style.left = '20px';
+    toggleBtn.style.zIndex = '10000';
+    toggleBtn.style.width = '32px';
+    toggleBtn.style.height = '32px';
+    toggleBtn.style.backgroundSize = 'cover';
+    document.body.appendChild(toggleBtn);
+
+    toggleBtn.onclick = () => {
+        painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
     };
 
-    // Função para enviar a mensagem de MP
-    const enviarMensagem = (jogador, fakes) => {
-        // Aqui a lógica para enviar a MP vai depender de como a página do TW é estruturada.
-        console.log(`Enviando MP para: ${jogador}`);
-        console.log(`Fakes para enviar: ${fakes.join(', ')}`);
-        // Aqui você pode inserir o código para preencher o formulário e enviar a MP
-    };
-
-    // Botão de "Iniciar Envio"
-    document.getElementById('iniciarEnvio').addEventListener('click', enviarMP);
-
-    // Exibe um log
+    // Mini log
     const log = document.getElementById('tw_script_log');
-    const addLog = (msg) => {
+    const addLog = (msg, color = 'green') => {
         const time = new Date().toLocaleTimeString();
-        log.innerHTML = `<span style="color:green">[${time}] ${msg}</span>`;
+        log.innerHTML = `<span style="color:${color}">[${time}] ${msg}</span>`;
     };
 
-    addLog("MP OP Auto carregado");
+    // Monta lista de scripts com categorias
+    const container = document.getElementById('lista_scripts');
 
+    const render = () => {
+        container.innerHTML = '';
+        const ocultar = document.getElementById('ocultar_desativados').checked;
+
+        Object.keys(categories).forEach(cat => {
+            const group = scripts.filter(s => s.categoria === cat);
+            if (group.length === 0) return;
+
+            const catDiv = document.createElement('div');
+            catDiv.className = 'tw_script_category';
+            catDiv.textContent = categories[cat];
+            container.appendChild(catDiv);
+
+            group.forEach(script => {
+                const ativo = savedState[script.key];
+                if (ocultar && !ativo) return;
+
+                const div = document.createElement('div');
+                div.title = script.tooltip;
+                div.innerHTML = `
+                    ${script.icon} ${script.name}
+                    ${ativo ? '<span class="tw_script_loaded">✔️</span>' : ''}
+                    <input type="checkbox" ${ativo ? 'checked' : ''} data-key="${script.key}" style="margin-left:5px">
+                    <span class="tw_script_action" data-reload="${script.key}" title="Recarregar">🔄</span>
+                `;
+                container.appendChild(div);
+            });
+        });
+    };
+
+    const loadScript = (script, force = false) => {
+        if (document.getElementById(`tw_script_${script.key}`) && !force) return;
+        fetch(script.url)
+            .then(res => res.text())
+            .then(code => {
+                eval(code);
+                addLog(`${script.name} carregado`);
+            })
+            .catch(err => addLog(`Erro ao carregar ${script.name}: ${err}`, 'red'));
+    };
+
+    // Eventos
+    painel.addEventListener('change', (e) => {
+        const el = e.target;
+        if (el.id === 'toggle_escuro') {
+            painel.classList.toggle('dark', el.checked);
+            return;
+        }
+        if (el.id === 'ocultar_desativados') {
+            render();
+            return;
+        }
+        if (el.type === 'checkbox' && el.dataset.key) {
+            const key = el.dataset.key;
+            savedState[key] = el.checked;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+            render();
+            if (el.checked) {
+                const script = scripts.find(s => s.key === key);
+                if (script) loadScript(script);
+            }
+        }
+    });
+
+    painel.addEventListener('click', (e) => {
+        const el = e.target;
+        if (el.dataset.reload) {
+            const key = el.dataset.reload;
+            const script = scripts.find(s => s.key === key);
+            if (script) {
+                loadScript(script, true);
+            }
+        }
+    });
+
+    // Reaplicar scripts marcados
+    scripts.forEach(s => {
+        if (savedState[s.key]) {
+            loadScript(s);
+        }
+    });
+
+    render();
 })();
