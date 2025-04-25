@@ -14,10 +14,10 @@
         {
             name: 'Conversor Defesa POP',
             key: 'conversor',
-            icon: '🛡️',
+            icon: '🛠️',
             tooltip: 'Converter tropas em código de defesa BB',
             url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js',
-            categoria: 'defesa'
+            categoria: 'organizacao'
         },
         {
             name: 'MP OP Auto',
@@ -83,7 +83,6 @@
     `;
     document.body.appendChild(painel);
 
-    // Engrenagem (botão flutuante)
     const toggleBtn = document.createElement('div');
     toggleBtn.className = 'quest';
     toggleBtn.id = 'tw_toggle_interface';
@@ -96,14 +95,12 @@
         painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
     };
 
-    // Mini log
     const log = document.getElementById('tw_script_log');
     const addLog = (msg, color = 'green') => {
         const time = new Date().toLocaleTimeString();
         log.innerHTML = `<span style="color:${color}">[${time}] ${msg}</span>`;
     };
 
-    // Monta lista de scripts com categorias
     const container = document.getElementById('lista_scripts');
 
     const render = () => {
@@ -147,7 +144,6 @@
             .catch(err => addLog(`Erro ao carregar ${script.name}: ${err}`, 'red'));
     };
 
-    // Eventos
     painel.addEventListener('change', (e) => {
         const el = e.target;
         if (el.id === 'toggle_escuro') {
@@ -181,7 +177,6 @@
         }
     });
 
-    // Reaplicar scripts marcados
     scripts.forEach(s => {
         if (savedState[s.key]) {
             loadScript(s);
