@@ -33,16 +33,21 @@
 toggleBtn.className = 'questlog';
 toggleBtn.id = 'tw_toggle_interface';
 toggleBtn.innerHTML = '<div class="quest" style="cursor:pointer"></div>';
-toggleBtn.style.position = 'fixed';
-toggleBtn.style.top = '40px';
-toggleBtn.style.left = '20px';
-toggleBtn.style.zIndex = '9998';
-document.body.appendChild(toggleBtn);
+toggleBtn.style.position = 'absolute';
+toggleBtn.style.top = '96px';
+toggleBtn.style.left = '5px';
+toggleBtn.style.zIndex = '50';
+toggleBtn.style.width = '32px';
+toggleBtn.style.height = '32px';
+toggleBtn.style.background = 'url(/graphic//questlog/questlog_open.png) no-repeat center';
+toggleBtn.style.backgroundSize = 'cover';
+document.querySelector('#questlog_new')?.after(toggleBtn);
 toggleBtn.onclick = () => {
     const visible = painel.style.display !== 'none';
     painel.style.display = visible ? 'none' : 'block';
 };
 painel.style.display = 'none';
+painel.id = 'tw_script_manager_painel';
 document.body.appendChild(painel);
 
     const lista = document.getElementById('lista_scripts');
