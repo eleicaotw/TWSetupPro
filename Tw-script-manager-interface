@@ -1,209 +1,148 @@
 (function () {
     'use strict';
 
-    const STORAGE_KEY = 'tw_script_manager_state_v2';
-    const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const STORAGE_KEY = 'tw_script_manager_state_v4';
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const userScripts = saved.scripts || [];
 
-    const categories = {
-        ataque: '⚔️ Ataque',
-        defesa: '🛡️ Defesa',
-        organizacao: '🧩 Organização'
+    const themes = {
+        claro: '#f4e4bc',
+        escuro: '#2b2b2b',
+        tribal: '#e7d9b2',
+        neutro: '#dcdcdc'
     };
 
-    const scripts = [
-        {
-            name: 'Conversor Defesa POP',
-            key: 'conversor',
-            icon: '🛠️',
-            tooltip: 'Converter tropas em código de defesa BB',
-            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js',
-            categoria: 'organizacao'
-        },
-        {
-            name: 'MP OP Auto',
-            key: 'mpop',
-            icon: '📨',
-            tooltip: 'Automatizar envio de MPs em OPs',
-            url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/mp-op-auto.js',
-            categoria: 'organizacao'
-        }
-    ];
+    const categoriasPadrao = {
+        ataque: '⚔️ Ataque',
+        defesa: '🛡️ Defesa',
+        organizacao: '🧩 Organização',
+        forum: '📋 Fórum'
+    };
 
-    const style = document.createElement('style');
-    style.textContent = `
-        #tw_script_manager_painel {
-            position: fixed;
-            top: 120px;
-            left: 20px;
-            z-index: 9999;
-            background: #f4e4bc;
-            padding: 10px;
-            border: 2px solid #c4a300;
-            font-family: Verdana;
-            border-radius: 12px;
-            box-shadow: 2px 2px 8px #0006;
-            transition: opacity 0.3s ease;
-        }
-        #tw_script_manager_painel.dark {
-            background: #2b2b2b;
-            color: #f0f0f0;
-            border: 2px solid #888;
-        }
-        #tw_script_log {
-            margin-top: 10px;
-            font-size: 11px;
-        }
-        .tw_script_loaded {
-            color: green;
-            font-weight: bold;
-        }
-        .tw_script_category {
-            font-weight: bold;
-            padding-top: 8px;
-        }
-        .tw_script_action {
-            margin-left: 4px;
-            cursor: pointer;
-        }
-        #tw_script_manager_painel.dragging {
-            opacity: 0.7;
-        }
-    `;
-    document.head.appendChild(style);
+    let categoriaAberta = {};
 
+    // Criando painel de scripts
     const painel = document.createElement('div');
-    painel.id = 'tw_script_manager_painel';
-    painel.style.display = 'none';
-    painel.innerHTML = `
-        <b>Menu de Scripts</b>
-        <label style="float:right;font-size:11px;"><input type="checkbox" id="toggle_escuro"> 🌙 Escuro</label><br style="clear:both">
-        <label style="font-size:11px;"><input type="checkbox" id="ocultar_desativados"> Ocultar desativados</label>
-        <div id="lista_scripts" style="margin-top:5px;"></div>
-        <div id="tw_script_log" style="color: green;"></div>
-    `;
-    document.body.appendChild(painel);
+    painel.id = 'tw_script_manager';
+    painel.style = 'position:fixed;top:120px;left:20px;z-index:9999;padding:10px;background:#f4e4bc;border:2px solid #c4a300;border-radius:12px;box-shadow:2px 2px 8px #0006;';
+    painel.style.background = themes[saved.tema || 'claro'];
 
-    // Engrenagem (botão flutuante)
+    // Botão de toggle (engrenagem)
     const toggleBtn = document.createElement('div');
     toggleBtn.className = 'quest';
-    toggleBtn.id = 'tw_toggle_interface';
     toggleBtn.title = 'Abrir Script Manager';
     toggleBtn.style.backgroundImage = 'url(https://dsbr.innogamescdn.com/asset/47657033/graphic/icons/settings.png)';
     toggleBtn.style.cursor = 'pointer';
-    document.getElementById('questlog_new')?.appendChild(toggleBtn);
-
     toggleBtn.onclick = () => {
         painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
     };
 
-    // Mini log
-    const log = document.getElementById('tw_script_log');
-    const addLog = (msg, color = 'green') => {
-        const time = new Date().toLocaleTimeString();
-        log.innerHTML = `<span style="color:${color}">[${time}] ${msg}</span>`;
+    window.addEventListener('load', () => {
+        const questlog = document.getElementById('questlog_new');
+        if (questlog) questlog.appendChild(toggleBtn);
+        else console.warn('Elemento #questlog_new não encontrado.');
+    });
+
+    // Renderização de scripts
+    const render = () => {
+        painel.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <b>Script Manager</b>
+        </div>
+        <input type="text" id="filtro_scripts" placeholder="Buscar por nome ou categoria" style="margin:6px 0;width:100%;">
+        <div id="area_scripts" style="max-height:300px;overflow:auto;"></div>
+        <details style="margin-top:10px;">
+            <summary>➕ Adicionar novo script</summary>
+            <input id="novo_nome" placeholder="Nome" style="width:100%;margin-top:4px;">
+            <input id="novo_url" placeholder="URL .js" style="width:100%;margin-top:4px;">
+            <input id="novo_categoria" placeholder="Categoria" style="width:100%;margin-top:4px;">
+            <input id="novo_emoji" placeholder="Emoji (🔧)" style="width:100%;margin-top:4px;">
+            <button id="adicionar_script" style="margin-top:5px;width:100%;">Adicionar</button>
+        </details>
+        <div id="log_script" style="margin-top:5px;font-size:11px;color:green;"></div>
+        `;
+        document.body.appendChild(painel);
+        carregarScripts(userScripts);
     };
 
-    // Monta lista de scripts com categorias
-    const container = document.getElementById('lista_scripts');
+    // Função para carregar e renderizar scripts
+    const carregarScripts = (lista) => {
+        const area = document.getElementById('area_scripts');
+        const filtro = document.getElementById('filtro_scripts').value.toLowerCase();
+        area.innerHTML = '';
+        const porCategoria = {};
 
-    const render = () => {
-        container.innerHTML = '';
-        const ocultar = document.getElementById('ocultar_desativados').checked;
+        lista.forEach(s => {
+            if (!porCategoria[s.categoria]) porCategoria[s.categoria] = [];
+            porCategoria[s.categoria].push(s);
+        });
 
-        Object.keys(categories).forEach(cat => {
-            const group = scripts.filter(s => s.categoria === cat);
-            if (group.length === 0) return;
+        Object.entries(porCategoria).forEach(([categoria, scripts]) => {
+            const container = document.createElement('div');
+            const header = document.createElement('div');
+            header.style = 'font-weight:bold;margin-top:8px;cursor:pointer;';
+            const aberta = categoriaAberta[categoria] ?? true;
+            header.innerHTML = `${aberta ? '▼' : '►'} ${categoriasPadrao[categoria] || categoria}`;
+            header.onclick = () => {
+                categoriaAberta[categoria] = !categoriaAberta[categoria];
+                render();
+            };
+            container.appendChild(header);
 
-            const catDiv = document.createElement('div');
-            catDiv.className = 'tw_script_category';
-            catDiv.textContent = categories[cat];
-            container.appendChild(catDiv);
+            if (aberta) {
+                scripts.forEach(s => {
+                    if (filtro && !s.nome.toLowerCase().includes(filtro) && !s.categoria.toLowerCase().includes(filtro)) return;
+                    const linha = document.createElement('div');
+                    linha.title = s.url;
+                    linha.innerHTML = `
+                        ${s.emoji || '📜'} ${s.nome}
+                        <button data-url="${s.url}" style="float:right">🔄</button>
+                    `;
+                    const btn = linha.querySelector('button');
+                    btn.onclick = () => executarScript(s.url, s.nome);
+                    container.appendChild(linha);
+                });
+            }
 
-            group.forEach(script => {
-                const ativo = savedState[script.key];
-                if (ocultar && !ativo) return;
-
-                const div = document.createElement('div');
-                div.title = script.tooltip;
-                div.innerHTML = `
-                    ${script.icon} ${script.name}
-                    ${ativo ? '<span class="tw_script_loaded">✔️</span>' : ''}
-                    <input type="checkbox" ${ativo ? 'checked' : ''} data-key="${script.key}" style="margin-left:5px">
-                    <span class="tw_script_action" data-reload="${script.key}" title="Recarregar">🔄</span>
-                `;
-                container.appendChild(div);
-            });
+            area.appendChild(container);
         });
     };
 
-    const loadScript = (script, force = false) => {
-        if (document.getElementById(`tw_script_${script.key}`) && !force) return;
-        fetch(script.url)
+    const executarScript = (url, nome) => {
+        fetch(url)
             .then(res => res.text())
             .then(code => {
                 eval(code);
-                addLog(`${script.name} carregado`);
+                log(`${nome} carregado ✔️`);
             })
-            .catch(err => addLog(`Erro ao carregar ${script.name}: ${err}`, 'red'));
+            .catch(() => log(`${nome} falhou ao carregar ❌`, true));
     };
 
-    // Eventos
-    painel.addEventListener('change', (e) => {
-        const el = e.target;
-        if (el.id === 'toggle_escuro') {
-            painel.classList.toggle('dark', el.checked);
-            return;
-        }
-        if (el.id === 'ocultar_desativados') {
+    const log = (msg, erro = false) => {
+        const el = document.getElementById('log_script');
+        const hora = new Date().toLocaleTimeString();
+        el.style.color = erro ? 'red' : 'green';
+        el.textContent = `[${hora}] ${msg}`;
+    };
+
+    document.addEventListener('change', e => {
+        if (e.target.id === 'filtro_scripts') carregarScripts(userScripts);
+    });
+
+    document.addEventListener('click', e => {
+        if (e.target.id === 'adicionar_script') {
+            const nome = document.getElementById('novo_nome').value.trim();
+            const url = document.getElementById('novo_url').value.trim();
+            const cat = document.getElementById('novo_categoria').value.trim().toLowerCase();
+            const emoji = document.getElementById('novo_emoji').value.trim();
+            if (!nome || !url) return log('Preencha nome e URL.', true);
+            const novo = { nome, url, categoria: cat || 'outros', emoji: emoji || '📜' };
+            userScripts.push(novo);
+            saved.scripts = userScripts;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
             render();
-            return;
+            log(`${nome} adicionado.`);
         }
-        if (el.type === 'checkbox' && el.dataset.key) {
-            const key = el.dataset.key;
-            savedState[key] = el.checked;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
-            render();
-            if (el.checked) {
-                const script = scripts.find(s => s.key === key);
-                if (script) loadScript(script);
-            }
-        }
-    });
-
-    painel.addEventListener('click', (e) => {
-        const el = e.target;
-        if (el.dataset.reload) {
-            const key = el.dataset.reload;
-            const script = scripts.find(s => s.key === key);
-            if (script) {
-                loadScript(script, true);
-            }
-        }
-    });
-
-    // Reaplicar scripts marcados
-    scripts.forEach(s => {
-        if (savedState[s.key]) {
-            loadScript(s);
-        }
-    });
-
-    // Arrastar painel
-    let offset = null;
-    painel.addEventListener('mousedown', e => {
-        if (e.target.id === 'tw_script_manager_painel') {
-            offset = [e.clientX - painel.offsetLeft, e.clientY - painel.offsetTop];
-            painel.classList.add('dragging');
-        }
-    });
-    document.addEventListener('mousemove', e => {
-        if (!offset) return;
-        painel.style.left = `${e.clientX - offset[0]}px`;
-        painel.style.top = `${e.clientY - offset[1]}px`;
-    });
-    document.addEventListener('mouseup', () => {
-        offset = null;
-        painel.classList.remove('dragging');
     });
 
     render();
