@@ -29,7 +29,21 @@
     const painel = document.createElement('div');
     painel.style = 'position: fixed; top: 40px; left: 20px; z-index: 9999; background: #f4e4bc; padding: 10px; border: 2px solid #c4a300; font-family: Verdana;';
     painel.innerHTML = `<b>Menu de Scripts</b><br><table><thead><tr><th style="text-align:left">Script</th><th>Ativar</th></tr></thead><tbody id="lista_scripts"></tbody></table>`;
-    document.body.appendChild(painel);
+    const toggleBtn = document.createElement('div');
+toggleBtn.className = 'questlog';
+toggleBtn.id = 'tw_toggle_interface';
+toggleBtn.innerHTML = '<div class="quest" style="cursor:pointer"></div>';
+toggleBtn.style.position = 'fixed';
+toggleBtn.style.top = '40px';
+toggleBtn.style.left = '20px';
+toggleBtn.style.zIndex = '9998';
+document.body.appendChild(toggleBtn);
+toggleBtn.onclick = () => {
+    const visible = painel.style.display !== 'none';
+    painel.style.display = visible ? 'none' : 'block';
+};
+painel.style.display = 'none';
+document.body.appendChild(painel);
 
     const lista = document.getElementById('lista_scripts');
 
