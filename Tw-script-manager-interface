@@ -14,10 +14,10 @@
         {
             name: 'Conversor Defesa POP',
             key: 'conversor',
-            icon: '🛡️',
+            icon: '🛠️',
             tooltip: 'Converter tropas em código de defesa BB',
             url: 'https://raw.githubusercontent.com/eleicaotw/TWSetupPro/refs/heads/main/conversor-forum-code-bb-defesa.js',
-            categoria: 'defesa'
+            categoria: 'organizacao'
         },
         {
             name: 'MP OP Auto',
