@@ -11,13 +11,11 @@
             box-shadow: 0 0 10px #0006;
             width: 380px;
         }
-
         #twConversor h4 {
             margin: 0 0 10px 0;
             font-size: 16px;
             color: #502d16;
         }
-
         #twConversor textarea {
             width: 100%;
             font-family: monospace;
@@ -25,7 +23,6 @@
             padding: 5px;
             resize: vertical;
         }
-
         #twConversor button {
             background-color: #d0b36b;
             border: 1px solid #aa8c39;
@@ -33,7 +30,6 @@
             cursor: pointer;
             font-weight: bold;
         }
-
         #minimizarTW {
             position: absolute;
             top: 5px;
@@ -45,14 +41,12 @@
             cursor: pointer;
             color: #502d16;
         }
-
         #twWrapper {
             position: fixed;
             top: 100px;
             right: 20px;
             z-index: 9999;
         }
-
         #twToggle {
             display: none;
             position: fixed;
@@ -66,65 +60,3 @@
             width: 30px;
             height: 30px;
             text-align: center;
-            line-height: 25px;
-            cursor: pointer;
-            z-index: 9999;
-        }
-    `;
-
-    const estilo = document.createElement("style");
-    estilo.textContent = estiloTW;
-    document.head.appendChild(estilo);
-
-    const wrapper = document.createElement("div");
-    wrapper.id = "twWrapper";
-    wrapper.innerHTML = `
-        <div id="twConversor">
-            <button id="minimizarTW">−</button>
-            <h4>Conversor TW</h4>
-            <textarea id="entrada" rows="7" placeholder="Cole os códigos aqui..."></textarea>
-            <button id="converter">Converter</button>
-            <textarea id="saida" rows="7" readonly placeholder="Resultado..."></textarea>
-        </div>
-        <div id="twToggle">+</div>
-    `;
-    document.body.appendChild(wrapper);
-
-    const entrada = document.getElementById("entrada");
-    const saida = document.getElementById("saida");
-    const btnConverter = document.getElementById("converter");
-    const btnMinimizar = document.getElementById("minimizarTW");
-    const toggleBtn = document.getElementById("twToggle");
-    const blocoConversor = document.getElementById("twConversor");
-
-    btnConverter.onclick = function () {
-        const input = entrada.value.trim();
-        const linhas = input.split(/\n+/);
-        let contador = 1;
-
-        const resultados = linhas.map(linha => {
-            const coordMatch = linha.match(/\[coord](\d+\|\d+)\[\/coord]/);
-            const valores = [...linha.matchAll(/\[color=.*?](\d+)\[\/color]/g)].map(m => parseInt(m[1]));
-
-            if (coordMatch && valores.length === 3) {
-                const coord = coordMatch[1];
-                const resultado = valores[0] + valores[1] + (valores[2] * 4);
-                return `[*]${contador}[|][coord]${coord}[/coord][|][color=#ff0000]${resultado}[/color][|][color=#ff0000]🛡️[/color][|][color=#ff0000]🛡️[/color][|]:shield:`;
-            } else {
-                return `⚠️ Erro ao processar linha ${contador}`;
-            }
-        }).join("\n");
-
-        saida.value = resultados;
-    };
-
-    btnMinimizar.onclick = () => {
-        blocoConversor.style.display = "none";
-        toggleBtn.style.display = "block";
-    };
-
-    toggleBtn.onclick = () => {
-        blocoConversor.style.display = "block";
-        toggleBtn.style.display = "none";
-    };
-})();
