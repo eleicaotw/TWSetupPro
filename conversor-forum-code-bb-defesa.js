@@ -60,3 +60,56 @@
             width: 30px;
             height: 30px;
             text-align: center;
+            line-height: 25px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+    `;
+
+    const estilo = document.createElement("style");
+    estilo.textContent = estiloTW;
+    document.head.appendChild(estilo);
+
+    const wrapper = document.createElement("div");
+    wrapper.id = "twWrapper";
+    wrapper.innerHTML = `
+        <div id="twConversor">
+            <button id="minimizarTW">−</button>
+            <h4>Corrigir Numeração TW</h4>
+            <textarea id="entrada" rows="10" placeholder="Cole os códigos aqui..."></textarea>
+            <button id="converter">Corrigir Numeração</button>
+            <textarea id="saida" rows="10" readonly placeholder="Resultado..."></textarea>
+        </div>
+        <div id="twToggle">+</div>
+    `;
+    document.body.appendChild(wrapper);
+
+    const entrada = document.getElementById("entrada");
+    const saida = document.getElementById("saida");
+    const btnConverter = document.getElementById("converter");
+    const btnMinimizar = document.getElementById("minimizarTW");
+    const toggleBtn = document.getElementById("twToggle");
+    const blocoConversor = document.getElementById("twConversor");
+
+    btnConverter.onclick = function () {
+        const input = entrada.value.trim();
+        const linhas = input.split(/\n+/);
+        let contador = 1;
+
+        const resultados = linhas.map(linha => {
+            return linha.replace(/\[\*\]1/, `[*]${contador++}`);
+        }).join("\n");
+
+        saida.value = resultados;
+    };
+
+    btnMinimizar.onclick = () => {
+        blocoConversor.style.display = "none";
+        toggleBtn.style.display = "block";
+    };
+
+    toggleBtn.onclick = () => {
+        blocoConversor.style.display = "block";
+        toggleBtn.style.display = "none";
+    };
+})();
