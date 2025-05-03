@@ -33,6 +33,11 @@
             .catch(err => console.error('[WatchdogCaptcha] Erro de rede:', err));
     };
 
+    // Função para enviar notificação de teste
+    const sendTestNotification = () => {
+        sendWhatsAppAlert('✅ Teste de notificação - Mensagem enviada com sucesso!');
+    };
+
     const captchaDetected = () => {
         const el = document.querySelector('.botprotection_quest#quest');
         return el && getComputedStyle(el).display !== 'none';
@@ -54,4 +59,27 @@
     console.log('[WatchdogCaptcha] Ativado.');
     monitorDOM();
     if (captchaDetected()) logoutAndNotify();
+
+    // Adiciona o botão de teste de notificação na interface
+    const testButton = document.createElement('button');
+    testButton.innerText = 'Enviar Teste WhatsApp';
+    testButton.style.padding = '8px 12px';
+    testButton.style.fontSize = '14px';
+    testButton.style.marginTop = '10px';
+    testButton.style.backgroundColor = '#4CAF50';
+    testButton.style.color = 'white';
+    testButton.style.border = 'none';
+    testButton.style.borderRadius = '5px';
+    testButton.style.cursor = 'pointer';
+
+    testButton.addEventListener('click', () => {
+        sendTestNotification();
+    });
+
+    // Adiciona o botão à interface do painel
+    const panel = document.getElementById('tw-panel');
+    if (panel) {
+        panel.appendChild(testButton);
+    }
+
 })();
