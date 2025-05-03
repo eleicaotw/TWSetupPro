@@ -1,0 +1,57 @@
+// Módulo: watchdogCaptcha
+
+(function runWatchdogCaptcha() {
+    // Recupera o estado salvo da interface
+    const state = JSON.parse(localStorage.getItem('tw_script_manager_state_v2') || '{}');
+    const scriptState = state.watchdogCaptcha;
+
+    if (!scriptState || !scriptState.active) {
+        console.log('[WatchdogCaptcha] Inativo. Ignorando execução.');
+        return;
+    }
+
+    const phone = scriptState.phone;
+    const key = scriptState.key;
+
+    if (!phone || !key) {
+        console.warn('[WatchdogCaptcha] Configuração incompleta: telefone ou chave ausente.');
+        return;
+    }
+
+    const API_URL = 'https://api.callmebot.com/whatsapp.php';
+    const LOGOUT_URL = 'https://www.tribalwars.com.br/game.php?screen=logout';
+
+    const sendWhatsAppAlert = (message) => {
+        const params = new URLSearchParams({
+            phone,
+            text: message,
+            apikey: key
+        });
+
+        fetch(`${API_URL}?${params.toString()}`)
+            .then(res => res.ok ? console.log('[WatchdogCaptcha] Mensagem enviada.') : console.error('[WatchdogCaptcha] Erro ao enviar.'))
+            .catch(err => console.error('[WatchdogCaptcha] Erro de rede:', err));
+    };
+
+    const captchaDetected = () => {
+        const el = document.querySelector('.botprotection_quest#quest');
+        return el && getComputedStyle(el).display !== 'none';
+    };
+
+    const logoutAndNotify = () => {
+        console.warn('[WatchdogCaptcha] CAPTCHA detectado. Encerrando sessão...');
+        sendWhatsAppAlert('⚠️ CAPTCHA detectado! Você foi deslogado automaticamente do Tribal Wars.');
+        location.href = LOGOUT_URL;
+    };
+
+    const monitorDOM = () => {
+        const observer = new MutationObserver(() => {
+            if (captchaDetected()) logoutAndNotify();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    };
+
+    console.log('[WatchdogCaptcha] Ativado.');
+    monitorDOM();
+    if (captchaDetected()) logoutAndNotify();
+})();
