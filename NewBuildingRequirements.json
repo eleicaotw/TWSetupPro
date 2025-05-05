@@ -1,44 +1,34 @@
-
-const buildingRequirements = {
-    barracks: [
-        { building: 'main', level: 3 },
-    ],
-    stable: [
-        { building: 'main', level: 10 },
-        { building: 'barracks', level: 5 },
-        { building: 'smith', level: 5 },
-    ],
-    garage: [
-        { building: 'main', level: 10 },
-        { building: 'smith', level: 10 },
-    ],
-    watchtower: [
-        { building: 'main', level: 5 },
-        { building: 'farm', level: 5 },
-    ],
-    snob: [
-        { building: 'main', level: 20 },
-        { building: 'smith', level: 20 },
-        { building: 'market', level: 10 },
-    ],
-    smith: [
-        { building: 'main', level: 5 },
-        { building: 'barracks', level: 1 },
-    ],
-    market: [
-        { building: 'main', level: 3 },
-        { building: 'storage', level: 2 },
-    ],
-    wall: [
-        { building: 'barracks', level: 1 },
-    ]
-};
-
-function getBuildingRequirements(buildingKey) {
-    return buildingRequirements[buildingKey] || [];
-}
-
-if (typeof window !== 'undefined') {
-    window.getBuildingRequirements = getBuildingRequirements;
-    window.buildingRequirements = buildingRequirements;
+{
+  "barracks": [
+    { "building": "main", "level": 3 }
+  ],
+  "stable": [
+    { "building": "main", "level": 10 },
+    { "building": "barracks", "level": 5 },
+    { "building": "smith", "level": 5 }
+  ],
+  "garage": [
+    { "building": "main", "level": 10 },
+    { "building": "smith", "level": 10 }
+  ],
+  "watchtower": [
+    { "building": "main", "level": 5 },
+    { "building": "farm", "level": 5 }
+  ],
+  "snob": [
+    { "building": "main", "level": 20 },
+    { "building": "smith", "level": 20 },
+    { "building": "market", "level": 10 }
+  ],
+  "smith": [
+    { "building": "main", "level": 5 },
+    { "building": "barracks", "level": 1 }
+  ],
+  "market": [
+    { "building": "main", "level": 3 },
+    { "building": "storage", "level": 2 }
+  ],
+  "wall": [
+    { "building": "barracks", "level": 1 }
+  ]
 }
