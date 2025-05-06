@@ -129,8 +129,7 @@
     "requisitos": [
       { "building": "main", "level": 1 }
     ]
-  }
-}{
+  },
   "statue": {
     "custos": [
       { "nivel": 1, "madeira": 220, "argila": 220, "ferro": 220, "populacao": 10 }
