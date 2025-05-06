@@ -1,0 +1,477 @@
+{
+  "main": {
+    "custos": [
+      { "nivel": 1, "madeira": 90, "argila": 80, "ferro": 70, "populacao": 5 },
+      { "nivel": 2, "madeira": 113, "argila": 102, "ferro": 88, "populacao": 1 },
+      { "nivel": 3, "madeira": 143, "argila": 130, "ferro": 111, "populacao": 1 },
+      { "nivel": 4, "madeira": 180, "argila": 166, "ferro": 140, "populacao": 1 },
+      { "nivel": 5, "madeira": 227, "argila": 211, "ferro": 176, "populacao": 1 },
+      { "nivel": 6, "madeira": 286, "argila": 270, "ferro": 222, "populacao": 2 },
+      { "nivel": 7, "madeira": 360, "argila": 344, "ferro": 280, "populacao": 2 },
+      { "nivel": 8, "madeira": 454, "argila": 438, "ferro": 353, "populacao": 2 },
+      { "nivel": 9, "madeira": 572, "argila": 559, "ferro": 445, "populacao": 3 },
+      { "nivel": 10, "madeira": 720, "argila": 712, "ferro": 560, "populacao": 3 },
+      { "nivel": 11, "madeira": 908, "argila": 908, "ferro": 706, "populacao": 3 },
+      { "nivel": 12, "madeira": 1144, "argila": 1158, "ferro": 890, "populacao": 4 },
+      { "nivel": 13, "madeira": 1441, "argila": 1476, "ferro": 1121, "populacao": 5 },
+      { "nivel": 14, "madeira": 1816, "argila": 1882, "ferro": 1412, "populacao": 5 },
+      { "nivel": 15, "madeira": 2288, "argila": 2400, "ferro": 1779, "populacao": 7 },
+      { "nivel": 16, "madeira": 2883, "argila": 3060, "ferro": 2242, "populacao": 8 },
+      { "nivel": 17, "madeira": 3632, "argila": 3902, "ferro": 2825, "populacao": 9 },
+      { "nivel": 18, "madeira": 4577, "argila": 4975, "ferro": 3560, "populacao": 10 },
+      { "nivel": 19, "madeira": 5767, "argila": 6343, "ferro": 4485, "populacao": 12 },
+      { "nivel": 20, "madeira": 7266, "argila": 8087, "ferro": 5651, "populacao": 15 },
+      { "nivel": 21, "madeira": 9155, "argila": 10311, "ferro": 7120, "populacao": 17 },
+      { "nivel": 22, "madeira": 11535, "argila": 13146, "ferro": 8972, "populacao": 19 },
+      { "nivel": 23, "madeira": 14534, "argila": 16762, "ferro": 11304, "populacao": 23 },
+      { "nivel": 24, "madeira": 18313, "argila": 21371, "ferro": 14244, "populacao": 27 },
+      { "nivel": 25, "madeira": 23075, "argila": 27248, "ferro": 17947, "populacao": 31 },
+      { "nivel": 26, "madeira": 29074, "argila": 34741, "ferro": 22613, "populacao": 37 },
+      { "nivel": 27, "madeira": 36633, "argila": 44295, "ferro": 28493, "populacao": 43 },
+      { "nivel": 28, "madeira": 46158, "argila": 56476, "ferro": 35901, "populacao": 51 },
+      { "nivel": 29, "madeira": 58159, "argila": 72007, "ferro": 45235, "populacao": 59 },
+      { "nivel": 30, "madeira": 73280, "argila": 91809, "ferro": 56996, "populacao": 69 }
+    ],
+    "requisitos": []
+  },
+  "barracks": {
+    "custos": [
+      { "nivel": 1, "madeira": 200, "argila": 170, "ferro": 90, "populacao": 7 },
+      { "nivel": 2, "madeira": 252, "argila": 218, "ferro": 113, "populacao": 1 },
+      { "nivel": 3, "madeira": 318, "argila": 279, "ferro": 143, "populacao": 2 },
+      { "nivel": 4, "madeira": 400, "argila": 357, "ferro": 180, "populacao": 1 },
+      { "nivel": 5, "madeira": 504, "argila": 456, "ferro": 227, "populacao": 2 },
+      { "nivel": 6, "madeira": 635, "argila": 584, "ferro": 286, "populacao": 2 },
+      { "nivel": 7, "madeira": 800, "argila": 748, "ferro": 360, "populacao": 3 },
+      { "nivel": 8, "madeira": 1008, "argila": 957, "ferro": 454, "populacao": 3 },
+      { "nivel": 9, "madeira": 1271, "argila": 1225, "ferro": 572, "populacao": 4 },
+      { "nivel": 10, "madeira": 1601, "argila": 1568, "ferro": 720, "populacao": 4 },
+      { "nivel": 11, "madeira": 2017, "argila": 2007, "ferro": 908, "populacao": 5 },
+      { "nivel": 12, "madeira": 2542, "argila": 2569, "ferro": 1144, "populacao": 5 },
+      { "nivel": 13, "madeira": 3202, "argila": 3288, "ferro": 1441, "populacao": 7 },
+      { "nivel": 14, "madeira": 4035, "argila": 4209, "ferro": 1816, "populacao": 8 },
+      { "nivel": 15, "madeira": 5084, "argila": 5388, "ferro": 2288, "populacao": 9 },
+      { "nivel": 16, "madeira": 6406, "argila": 6896, "ferro": 2883, "populacao": 11 },
+      { "nivel": 17, "madeira": 8072, "argila": 8827, "ferro": 3632, "populacao": 12 },
+      { "nivel": 18, "madeira": 10170, "argila": 11298, "ferro": 4577, "populacao": 15 },
+      { "nivel": 19, "madeira": 12814, "argila": 14462, "ferro": 5767, "populacao": 17 },
+      { "nivel": 20, "madeira": 16146, "argila": 18511, "ferro": 7266, "populacao": 20 },
+      { "nivel": 21, "madeira": 20344, "argila": 23695, "ferro": 9155, "populacao": 24 },
+      { "nivel": 22, "madeira": 25634, "argila": 30299, "ferro": 11535, "populacao": 27 },
+      { "nivel": 23, "madeira": 32398, "argila": 38821, "ferro": 14534, "populacao": 32 },
+      { "nivel": 24, "madeira": 40696, "argila": 49691, "ferro": 18313, "populacao": 38 },
+      { "nivel": 25, "madeira": 51277, "argila": 63605, "ferro": 23075, "populacao": 44 }
+    ],
+    "requisitos": [
+      { "building": "main", "level": 3 }
+    ]
+  },
+  "watchtower": {
+    "custos": [
+      { "nivel": 1, "madeira": 12000, "argila": 14000, "ferro": 10000, "populacao": 500 },
+      { "nivel": 2, "madeira": 14040, "argila": 16380, "ferro": 11800, "populacao": 90 },
+      { "nivel": 3, "madeira": 16427, "argila": 19165, "ferro": 13924, "populacao": 106 },
+      { "nivel": 4, "madeira": 19219, "argila": 22423, "ferro": 16430, "populacao": 126 },
+      { "nivel": 5, "madeira": 22487, "argila": 26234, "ferro": 19388, "populacao": 147 },
+      { "nivel": 6, "madeira": 26309, "argila": 30694, "ferro": 22878, "populacao": 175 },
+      { "nivel": 7, "madeira": 30782, "argila": 35912, "ferro": 26996, "populacao": 206 },
+      { "nivel": 8, "madeira": 36015, "argila": 42017, "ferro": 31855, "populacao": 243 },
+      { "nivel": 9, "madeira": 42137, "argila": 49160, "ferro": 37589, "populacao": 286 },
+      { "nivel": 10, "madeira": 49301, "argila": 57518, "ferro": 44355, "populacao": 339 },
+      { "nivel": 11, "madeira": 57682, "argila": 67296, "ferro": 52338, "populacao": 399 },
+      { "nivel": 12, "madeira": 67488, "argila": 78736, "ferro": 61759, "populacao": 471 },
+      { "nivel": 13, "madeira": 78961, "argila": 92121, "ferro": 72876, "populacao": 556 },
+      { "nivel": 14, "madeira": 92384, "argila": 107782, "ferro": 85994, "populacao": 656 },
+      { "nivel": 15, "madeira": 108089, "argila": 126104, "ferro": 101472, "populacao": 774 },
+      { "nivel": 16, "madeira": 126465, "argila": 147542, "ferro": 119737, "populacao": 913 },
+      { "nivel": 17, "madeira": 147964, "argila": 172624, "ferro": 141290, "populacao": 1078 },
+      { "nivel": 18, "madeira": 173117, "argila": 201970, "ferro": 166722, "populacao": 1271 },
+      { "nivel": 19, "madeira": 202547, "argila": 236000, "ferro": 196733, "populacao": 1501 },
+      { "nivel": 20, "madeira": 236981, "argila": 276477, "ferro": 232144, "populacao": 1770 }
+    ],
+    "requisitos": [
+      { "building": "main", "level": 5 },
+      { "building": "farm", "level": 5 }
+    ]
+  },
+  "smith": {
+    "custos": [
+      { "nivel": 1, "madeira": 220, "argila": 180, "ferro": 240, "populacao": 20 },
+      { "nivel": 2, "madeira": 277, "argila": 229, "ferro": 302, "populacao": 3 },
+      { "nivel": 3, "madeira": 349, "argila": 293, "ferro": 381, "populacao": 4 },
+      { "nivel": 4, "madeira": 440, "argila": 373, "ferro": 480, "populacao": 5 },
+      { "nivel": 5, "madeira": 555, "argila": 476, "ferro": 605, "populacao": 5 },
+      { "nivel": 6, "madeira": 699, "argila": 606, "ferro": 762, "populacao": 6 },
+      { "nivel": 7, "madeira": 880, "argila": 773, "ferro": 960, "populacao": 7 },
+      { "nivel": 8, "madeira": 1109, "argila": 986, "ferro": 1210, "populacao": 9 },
+      { "nivel": 9, "madeira": 1398, "argila": 1257, "ferro": 1525, "populacao": 10 },
+      { "nivel": 10, "madeira": 1761, "argila": 1603, "ferro": 1921, "populacao": 12 },
+      { "nivel": 11, "madeira": 2219, "argila": 2043, "ferro": 2421, "populacao": 14 },
+      { "nivel": 12, "madeira": 2796, "argila": 2605, "ferro": 3050, "populacao": 16 },
+      { "nivel": 13, "madeira": 3523, "argila": 3322, "ferro": 3843, "populacao": 20 },
+      { "nivel": 14, "madeira": 4439, "argila": 4236, "ferro": 4842, "populacao": 22 },
+      { "nivel": 15, "madeira": 5593, "argila": 5400, "ferro": 6101, "populacao": 26 },
+      { "nivel": 16, "madeira": 7047, "argila": 6885, "ferro": 7687, "populacao": 31 },
+      { "nivel": 17, "madeira": 8879, "argila": 8779, "ferro": 9686, "populacao": 36 },
+      { "nivel": 18, "madeira": 11187, "argila": 11193, "ferro": 12204, "populacao": 42 },
+      { "nivel": 19, "madeira": 14096, "argila": 14271, "ferro": 15377, "populacao": 49 },
+      { "nivel": 20, "madeira": 17761, "argila": 18196, "ferro": 19375, "populacao": 57 }
+    ],
+    "requisitos": [
+      { "building": "main", "level": 5 },
+      { "building": "barracks", "level": 1 }
+    ]
+  },
+  "place": {
+    "custos": [
+      { "nivel": 1, "madeira": 10, "argila": 40, "ferro": 30, "populacao": 0 }
+    ],
+    "requisitos": [
+      { "building": "main", "level": 1 }
+    ]
+  },
+  "statue": {
+    "custos": [
+      { "nivel": 1, "madeira": 220, "argila": 220, "ferro": 220, "populacao": 10 }
+    ],
+    "requisitos": []
+  },
+  "market": {
+    "custos": [
+      { "nivel": 1, "madeira": 100, "argila": 100, "ferro": 100, "populacao": 20 },
+      { "nivel": 2, "madeira": 126, "argila": 127, "ferro": 126, "populacao": 3 },
+      { "nivel": 3, "madeira": 159, "argila": 163, "ferro": 159, "populacao": 4 },
+      { "nivel": 4, "madeira": 200, "argila": 207, "ferro": 200, "populacao": 5 },
+      { "nivel": 5, "madeira": 252, "argila": 264, "ferro": 252, "populacao": 5 },
+      { "nivel": 6, "madeira": 318, "argila": 337, "ferro": 318, "populacao": 7 },
+      { "nivel": 7, "madeira": 400, "argila": 430, "ferro": 400, "populacao": 7 },
+      { "nivel": 8, "madeira": 504, "argila": 548, "ferro": 504, "populacao": 9 },
+      { "nivel": 9, "madeira": 635, "argila": 698, "ferro": 635, "populacao": 10 },
+      { "nivel": 10, "madeira": 800, "argila": 890, "ferro": 800, "populacao": 12 },
+      { "nivel": 11, "madeira": 1009, "argila": 1135, "ferro": 1009, "populacao": 14 },
+      { "nivel": 12, "madeira": 1271, "argila": 1447, "ferro": 1271, "populacao": 16 },
+      { "nivel": 13, "madeira": 1601, "argila": 1846, "ferro": 1601, "populacao": 20 },
+      { "nivel": 14, "madeira": 2018, "argila": 2353, "ferro": 2018, "populacao": 22 },
+      { "nivel": 15, "madeira": 2542, "argila": 3000, "ferro": 2542, "populacao": 26 },
+      { "nivel": 16, "madeira": 3203, "argila": 3825, "ferro": 3203, "populacao": 31 },
+      { "nivel": 17, "madeira": 4036, "argila": 4877, "ferro": 4036, "populacao": 36 },
+      { "nivel": 18, "madeira": 5085, "argila": 6218, "ferro": 5085, "populacao": 42 },
+      { "nivel": 19, "madeira": 6407, "argila": 7928, "ferro": 6407, "populacao": 49 },
+      { "nivel": 20, "madeira": 8073, "argila": 10109, "ferro": 8073, "populacao": 57 },
+      { "nivel": 21, "madeira": 10172, "argila": 12889, "ferro": 10172, "populacao": 67 },
+      { "nivel": 22, "madeira": 12817, "argila": 16433, "ferro": 12817, "populacao": 79 },
+      { "nivel": 23, "madeira": 16149, "argila": 20952, "ferro": 16149, "populacao": 92 },
+      { "nivel": 24, "madeira": 20348, "argila": 26714, "ferro": 20348, "populacao": 107 },
+      { "nivel": 25, "madeira": 25639, "argila": 34060, "ferro": 25639, "populacao": 126 }
+    ],
+    "requisitos": [
+      { "building": "main", "level": 3 },
+      { "building": "storage", "level": 2 }
+    ]
+  },
+  "wood": {
+    "custos": [
+      { "nivel": 1, "madeira": 50, "argila": 60, "ferro": 40, "populacao": 5 },
+      { "nivel": 2, "madeira": 63, "argila": 77, "ferro": 50, "populacao": 1 },
+      { "nivel": 3, "madeira": 78, "argila": 98, "ferro": 62, "populacao": 1 },
+      { "nivel": 4, "madeira": 98, "argila": 124, "ferro": 77, "populacao": 1 },
+      { "nivel": 5, "madeira": 122, "argila": 159, "ferro": 96, "populacao": 1 },
+      { "nivel": 6, "madeira": 153, "argila": 202, "ferro": 120, "populacao": 2 },
+      { "nivel": 7, "madeira": 191, "argila": 258, "ferro": 149, "populacao": 2 },
+      { "nivel": 8, "madeira": 238, "argila": 329, "ferro": 185, "populacao": 2 },
+      { "nivel": 9, "madeira": 298, "argila": 419, "ferro": 231, "populacao": 2 },
+      { "nivel": 10, "madeira": 373, "argila": 534, "ferro": 287, "populacao": 2 },
+      { "nivel": 11, "madeira": 466, "argila": 681, "ferro": 358, "populacao": 3 },
+      { "nivel": 12, "madeira": 582, "argila": 868, "ferro": 446, "populacao": 3 },
+      { "nivel": 13, "madeira": 728, "argila": 1107, "ferro": 555, "populacao": 4 },
+      { "nivel": 14, "madeira": 909, "argila": 1412, "ferro": 691, "populacao": 4 },
+      { "nivel": 15, "madeira": 1137, "argila": 1800, "ferro": 860, "populacao": 5 },
+      { "nivel": 16, "madeira": 1421, "argila": 2295, "ferro": 1071, "populacao": 5 },
+      { "nivel": 17, "madeira": 1776, "argila": 2926, "ferro": 1333, "populacao": 7 },
+      { "nivel": 18, "madeira": 2220, "argila": 3731, "ferro": 1659, "populacao": 8 },
+      { "nivel": 19, "madeira": 2776, "argila": 4757, "ferro": 2066, "populacao": 9 },
+      { "nivel": 20, "madeira": 3469, "argila": 6065, "ferro": 2572, "populacao": 10 },
+      { "nivel": 21, "madeira": 4337, "argila": 7733, "ferro": 3205, "populacao": 12 },
+      { "nivel": 22, "madeira": 5421, "argila": 9860, "ferro": 3987, "populacao": 14 },
+      { "nivel": 23, "madeira": 6776, "argila": 12571, "ferro": 4963, "populacao": 16 },
+      { "nivel": 24, "madeira": 8470, "argila": 16028, "ferro": 6180, "populacao": 19 },
+      { "nivel": 25, "madeira": 10588, "argila": 20436, "ferro": 7694, "populacao": 21 },
+      { "nivel": 26, "madeira": 13235, "argila": 26056, "ferro": 9578, "populacao": 24 },
+      { "nivel": 27, "madeira": 16544, "argila": 33221, "ferro": 11925, "populacao": 29 },
+      { "nivel": 28, "madeira": 20680, "argila": 42457, "ferro": 14847, "populacao": 33 },
+      { "nivel": 29, "madeira": 25489, "argila": 54405, "ferro": 18484, "populacao": 37 },
+      { "nivel": 30, "madeira": 32312, "argila": 68857, "ferro": 23013, "populacao": 43 }
+    ],
+    "requisitos": []
+  },
+  "clay": {
+    "custos": [
+      { "nivel": 1, "madeira": 65, "argila": 50, "ferro": 40, "populacao": 10 },
+      { "nivel": 2, "madeira": 83, "argila": 60, "ferro": 50, "populacao": 1 },
+      { "nivel": 3, "madeira": 105, "argila": 80, "ferro": 62, "populacao": 2 },
+      { "nivel": 4, "madeira": 133, "argila": 101, "ferro": 76, "populacao": 2 },
+      { "nivel": 5, "madeira": 169, "argila": 128, "ferro": 95, "populacao": 2 },
+      { "nivel": 6, "madeira": 215, "argila": 162, "ferro": 117, "populacao": 2 },
+      { "nivel": 7, "madeira": 273, "argila": 205, "ferro": 145, "populacao": 3 },
+      { "nivel": 8, "madeira": 346, "argila": 259, "ferro": 180, "populacao": 3 },
+      { "nivel": 9, "madeira": 440, "argila": 328, "ferro": 224, "populacao": 4 },
+      { "nivel": 10, "madeira": 559, "argila": 415, "ferro": 277, "populacao": 4 },
+      { "nivel": 11, "madeira": 709, "argila": 525, "ferro": 344, "populacao": 4 },
+      { "nivel": 12, "madeira": 901, "argila": 664, "ferro": 426, "populacao": 5 },
+      { "nivel": 13, "madeira": 1144, "argila": 840, "ferro": 529, "populacao": 6 },
+      { "nivel": 14, "madeira": 1453, "argila": 1062, "ferro": 655, "populacao": 7 },
+      { "nivel": 15, "madeira": 1846, "argila": 1343, "ferro": 813, "populacao": 8 },
+      { "nivel": 16, "madeira": 2344, "argila": 1700, "ferro": 1008, "populacao": 8 },
+      { "nivel": 17, "madeira": 2977, "argila": 2150, "ferro": 1250, "populacao": 10 },
+      { "nivel": 18, "madeira": 3781, "argila": 2720, "ferro": 1550, "populacao": 12 },
+      { "nivel": 19, "madeira": 4802, "argila": 3430, "ferro": 1922, "populacao": 13 },
+      { "nivel": 20, "madeira": 6068, "argila": 4352, "ferro": 2383, "populacao": 15 },
+      { "nivel": 21, "madeira": 7744, "argila": 5505, "ferro": 2955, "populacao": 16 },
+      { "nivel": 22, "madeira": 9835, "argila": 6964, "ferro": 3664, "populacao": 20 },
+      { "nivel": 23, "madeira": 12491, "argila": 8809, "ferro": 4543, "populacao": 22 },
+      { "nivel": 24, "madeira": 15863, "argila": 11144, "ferro": 5633, "populacao": 25 },
+      { "nivel": 25, "madeira": 20147, "argila": 13908, "ferro": 6935, "populacao": 28 },
+      { "nivel": 26, "madeira": 25586, "argila": 17394, "ferro": 8538, "populacao": 33 },
+      { "nivel": 27, "madeira": 32455, "argila": 21736, "ferro": 10470, "populacao": 37 },
+      { "nivel": 28, "madeira": 41168, "argila": 27165, "ferro": 12818, "populacao": 42 },
+      { "nivel": 29, "madeira": 52410, "argila": 33966, "ferro": 15615, "populacao": 48 },
+      { "nivel": 30, "madeira": 66561, "argila": 45666, "ferro": 20478, "populacao": 55 }
+    ],
+    "requisitos": []
+  },
+  "iron": {
+    "custos": [
+      { "nivel": 1, "madeira": 75, "argila": 65, "ferro": 70, "populacao": 10 },
+      { "nivel": 2, "madeira": 94, "argila": 83, "ferro": 87, "populacao": 2 },
+      { "nivel": 3, "madeira": 118, "argila": 106, "ferro": 108, "populacao": 2 },
+      { "nivel": 4, "madeira": 147, "argila": 135, "ferro": 133, "populacao": 2 },
+      { "nivel": 5, "madeira": 184, "argila": 172, "ferro": 165, "populacao": 3 },
+      { "nivel": 6, "madeira": 231, "argila": 219, "ferro": 205, "populacao": 3 },
+      { "nivel": 7, "madeira": 289, "argila": 279, "ferro": 254, "populacao": 4 },
+      { "nivel": 8, "madeira": 362, "argila": 356, "ferro": 316, "populacao": 4 },
+      { "nivel": 9, "madeira": 453, "argila": 454, "ferro": 391, "populacao": 5 },
+      { "nivel": 10, "madeira": 567, "argila": 579, "ferro": 485, "populacao": 6 },
+      { "nivel": 11, "madeira": 710, "argila": 738, "ferro": 602, "populacao": 7 },
+      { "nivel": 12, "madeira": 889, "argila": 941, "ferro": 746, "populacao": 8 },
+      { "nivel": 13, "madeira": 1113, "argila": 1200, "ferro": 925, "populacao": 10 },
+      { "nivel": 14, "madeira": 1393, "argila": 1493, "ferro": 1147, "populacao": 11 },
+      { "nivel": 15, "madeira": 1744, "argila": 1861, "ferro": 1422, "populacao": 13 },
+      { "nivel": 16, "madeira": 2183, "argila": 2328, "ferro": 1764, "populacao": 15 },
+      { "nivel": 17, "madeira": 2734, "argila": 2902, "ferro": 2187, "populacao": 18 },
+      { "nivel": 18, "madeira": 3432, "argila": 3642, "ferro": 2712, "populacao": 21 },
+      { "nivel": 19, "madeira": 4285, "argila": 4592, "ferro": 3363, "populacao": 25 },
+      { "nivel": 20, "madeira": 5365, "argila": 5790, "ferro": 4170, "populacao": 28 },
+      { "nivel": 21, "madeira": 6717, "argila": 7290, "ferro": 5170, "populacao": 34 },
+      { "nivel": 22, "madeira": 8409, "argila": 9161, "ferro": 6411, "populacao": 39 },
+      { "nivel": 23, "madeira": 10528, "argila": 11412, "ferro": 7950, "populacao": 46 },
+      { "nivel": 24, "madeira": 13181, "argila": 14246, "ferro": 9858, "populacao": 54 },
+      { "nivel": 25, "madeira": 16503, "argila": 17839, "ferro": 12384, "populacao": 63 },
+      { "nivel": 26, "madeira": 20662, "argila": 22367, "ferro": 15158, "populacao": 74 },
+      { "nivel": 27, "madeira": 25869, "argila": 28016, "ferro": 18976, "populacao": 86 },
+      { "nivel": 28, "madeira": 32358, "argila": 34967, "ferro": 23707, "populacao": 100 },
+      { "nivel": 29, "madeira": 40459, "argila": 43656, "ferro": 29690, "populacao": 118 },
+      { "nivel": 30, "madeira": 50768, "argila": 54955, "ferro": 35837, "populacao": 138 }
+    ],
+    "requisitos": []
+  },
+  "farm": {
+    "custos": [
+      { "nivel": 1, "madeira": 45, "argila": 40, "ferro": 30, "populacao": 0, "capacidade_pop": 240 },
+      { "nivel": 2, "madeira": 59, "argila": 53, "ferro": 39, "populacao": 0, "capacidade_pop": 281 },
+      { "nivel": 3, "madeira": 76, "argila": 70, "ferro": 50, "populacao": 0, "capacidade_pop": 329 },
+      { "nivel": 4, "madeira": 99, "argila": 92, "ferro": 64, "populacao": 0, "capacidade_pop": 386 },
+      { "nivel": 5, "madeira": 129, "argila": 121, "ferro": 83, "populacao": 0, "capacidade_pop": 452 },
+      { "nivel": 6, "madeira": 167, "argila": 160, "ferro": 107, "populacao": 0, "capacidade_pop": 530 },
+      { "nivel": 7, "madeira": 217, "argila": 212, "ferro": 138, "populacao": 0, "capacidade_pop": 622 },
+      { "nivel": 8, "madeira": 282, "argila": 279, "ferro": 178, "populacao": 0, "capacidade_pop": 729 },
+      { "nivel": 9, "madeira": 367, "argila": 369, "ferro": 230, "populacao": 0, "capacidade_pop": 854 },
+      { "nivel": 10, "madeira": 477, "argila": 487, "ferro": 297, "populacao": 0, "capacidade_pop": 1002 },
+      { "nivel": 11, "madeira": 620, "argila": 642, "ferro": 383, "populacao": 0, "capacidade_pop": 1174 },
+      { "nivel": 12, "madeira": 806, "argila": 848, "ferro": 494, "populacao": 0, "capacidade_pop": 1376 },
+      { "nivel": 13, "madeira": 1048, "argila": 1119, "ferro": 637, "populacao": 0, "capacidade_pop": 1613 },
+      { "nivel": 14, "madeira": 1363, "argila": 1477, "ferro": 822, "populacao": 0, "capacidade_pop": 1891 },
+      { "nivel": 15, "madeira": 1772, "argila": 1950, "ferro": 1060, "populacao": 0, "capacidade_pop": 2216 },
+      { "nivel": 16, "madeira": 2303, "argila": 2574, "ferro": 1368, "populacao": 0, "capacidade_pop": 2598 },
+      { "nivel": 17, "madeira": 2994, "argila": 3398, "ferro": 1764, "populacao": 0, "capacidade_pop": 3045 },
+      { "nivel": 18, "madeira": 3893, "argila": 4486, "ferro": 2276, "populacao": 0, "capacidade_pop": 3569 },
+      { "nivel": 19, "madeira": 5060, "argila": 5921, "ferro": 2936, "populacao": 0, "capacidade_pop": 4183 },
+      { "nivel": 20, "madeira": 6579, "argila": 7816, "ferro": 3787, "populacao": 0, "capacidade_pop": 4904 },
+      { "nivel": 21, "madeira": 8552, "argila": 10317, "ferro": 4886, "populacao": 0, "capacidade_pop": 5748 },
+      { "nivel": 22, "madeira": 11118, "argila": 13618, "ferro": 6302, "populacao": 0, "capacidade_pop": 6737 },
+      { "nivel": 23, "madeira": 14453, "argila": 17976, "ferro": 8130, "populacao": 0, "capacidade_pop": 7896 },
+      { "nivel": 24, "madeira": 18789, "argila": 23728, "ferro": 10488, "populacao": 0, "capacidade_pop": 9255 },
+      { "nivel": 25, "madeira": 24426, "argila": 31321, "ferro": 13529, "populacao": 0, "capacidade_pop": 10848 },
+      { "nivel": 26, "madeira": 31754, "argila": 41344, "ferro": 17453, "populacao": 0, "capacidade_pop": 12715 },
+      { "nivel": 27, "madeira": 41280, "argila": 54574, "ferro": 22514, "populacao": 0, "capacidade_pop": 14904 },
+      { "nivel": 28, "madeira": 53664, "argila": 72037, "ferro": 29043, "populacao": 0, "capacidade_pop": 17469 },
+      { "nivel": 29, "madeira": 69763, "argila": 95089, "ferro": 37466, "populacao": 0, "capacidade_pop": 20476 },
+      { "nivel": 30, "madeira": 90692, "argila": 125517, "ferro": 48331, "populacao": 0, "capacidade_pop": 24000 }
+    ],
+    "requisitos": []
+  },
+  "storage": {
+    "custos": [
+      { "nivel": 1, "madeira": 60, "argila": 50, "ferro": 40, "populacao": 0, "capacidade_rec": 1000 },
+      { "nivel": 2, "madeira": 76, "argila": 64, "ferro": 50, "populacao": 0, "capacidade_rec": 1229 },
+      { "nivel": 3, "madeira": 96, "argila": 81, "ferro": 62, "populacao": 0, "capacidade_rec": 1512 },
+      { "nivel": 4, "madeira": 121, "argila": 102, "ferro": 77, "populacao": 0, "capacidade_rec": 1859 },
+      { "nivel": 5, "madeira": 154, "argila": 130, "ferro": 96, "populacao": 0, "capacidade_rec": 2285 },
+      { "nivel": 6, "madeira": 194, "argila": 165, "ferro": 120, "populacao": 0, "capacidade_rec": 2810 },
+      { "nivel": 7, "madeira": 246, "argila": 210, "ferro": 149, "populacao": 0, "capacidade_rec": 3454 },
+      { "nivel": 8, "madeira": 311, "argila": 266, "ferro": 185, "populacao": 0, "capacidade_rec": 4247 },
+      { "nivel": 9, "madeira": 393, "argila": 338, "ferro": 231, "populacao": 0, "capacidade_rec": 5222 },
+      { "nivel": 10, "madeira": 498, "argila": 430, "ferro": 287, "populacao": 0, "capacidade_rec": 6420 },
+      { "nivel": 11, "madeira": 630, "argila": 546, "ferro": 358, "populacao": 0, "capacidade_rec": 7893 },
+      { "nivel": 12, "madeira": 796, "argila": 693, "ferro": 446, "populacao": 0, "capacidade_rec": 9705 },
+      { "nivel": 13, "madeira": 1007, "argila": 880, "ferro": 555, "populacao": 0, "capacidade_rec": 11932 },
+      { "nivel": 14, "madeira": 1274, "argila": 1118, "ferro": 691, "populacao": 0, "capacidade_rec": 14670 },
+      { "nivel": 15, "madeira": 1612, "argila": 1420, "ferro": 860, "populacao": 0, "capacidade_rec": 18037 },
+      { "nivel": 16, "madeira": 2039, "argila": 1803, "ferro": 1071, "populacao": 0, "capacidade_rec": 22177 },
+      { "nivel": 17, "madeira": 2580, "argila": 2290, "ferro": 1333, "populacao": 0, "capacidade_rec": 27266 },
+      { "nivel": 18, "madeira": 3264, "argila": 2908, "ferro": 1659, "populacao": 0, "capacidade_rec": 33523 },
+      { "nivel": 19, "madeira": 4128, "argila": 3693, "ferro": 2066, "populacao": 0, "capacidade_rec": 41217 },
+      { "nivel": 20, "madeira": 5222, "argila": 4691, "ferro": 2572, "populacao": 0, "capacidade_rec": 50675 },
+      { "nivel": 21, "madeira": 6606, "argila": 5957, "ferro": 3202, "populacao": 0, "capacidade_rec": 62305 },
+      { "nivel": 22, "madeira": 8357, "argila": 7566, "ferro": 3987, "populacao": 0, "capacidade_rec": 76604 },
+      { "nivel": 23, "madeira": 10572, "argila": 9568, "ferro": 4963, "populacao": 0, "capacidade_rec": 94184 },
+      { "nivel": 24, "madeira": 13373, "argila": 12203, "ferro": 6180, "populacao": 0, "capacidade_rec": 115798 },
+      { "nivel": 25, "madeira": 16917, "argila": 14967, "ferro": 7694, "populacao": 0, "capacidade_rec": 142373 },
+      { "nivel": 26, "madeira": 21400, "argila": 19682, "ferro": 9578, "populacao": 0, "capacidade_rec": 175047 },
+      { "nivel": 27, "madeira": 27071, "argila": 24996, "ferro": 11925, "populacao": 0, "capacidade_rec": 215219 },
+      { "nivel": 28, "madeira": 34445, "argila": 31745, "ferro": 14847, "populacao": 0, "capacidade_rec": 264611 },
+      { "nivel": 29, "madeira": 43320, "argila": 40316, "ferro": 18484, "populacao": 0, "capacidade_rec": 325337 },
+      { "nivel": 30, "madeira": 54799, "argila": 51201, "ferro": 23013, "populacao": 0, "capacidade_rec": 400000 }
+    ],
+    "requisitos": []
+  },
+  "hide": {
+    "custos": [
+      { "nivel": 1, "madeira": 50, "argila": 60, "ferro": 50, "populacao": 2 },
+      { "nivel": 2, "madeira": 63, "argila": 75, "ferro": 63, "populacao": 0 },
+      { "nivel": 3, "madeira": 78, "argila": 94, "ferro": 78, "populacao": 1 },
+      { "nivel": 4, "madeira": 98, "argila": 117, "ferro": 98, "populacao": 0 },
+      { "nivel": 5, "madeira": 122, "argila": 146, "ferro": 122, "populacao": 1 },
+      { "nivel": 6, "madeira": 153, "argila": 183, "ferro": 153, "populacao": 1 },
+      { "nivel": 7, "madeira": 191, "argila": 229, "ferro": 191, "populacao": 2 },
+      { "nivel": 8, "madeira": 238, "argila": 286, "ferro": 238, "populacao": 1 },
+      { "nivel": 9, "madeira": 298, "argila": 358, "ferro": 298, "populacao": 1 },
+      { "nivel": 10, "madeira": 373, "argila": 447, "ferro": 373, "populacao": 1 }
+    ],
+    "requisitos": []
+  },
+  "wall": {
+    "custos": [
+      { "nivel": 1, "madeira": 50, "argila": 100, "ferro": 20, "populacao": 5 },
+      { "nivel": 2, "madeira": 63, "argila": 127, "ferro": 25, "populacao": 1 },
+      { "nivel": 3, "madeira": 79, "argila": 162, "ferro": 32, "populacao": 1 },
+      { "nivel": 4, "madeira": 100, "argila": 207, "ferro": 40, "populacao": 1 },
+      { "nivel": 5, "madeira": 126, "argila": 264, "ferro": 50, "populacao": 1 },
+      { "nivel": 6, "madeira": 159, "argila": 337, "ferro": 64, "populacao": 2 },
+      { "nivel": 7, "madeira": 200, "argila": 430, "ferro": 80, "populacao": 2 },
+      { "nivel": 8, "madeira": 252, "argila": 548, "ferro": 101, "populacao": 2 },
+      { "nivel": 9, "madeira": 318, "argila": 698, "ferro": 127, "populacao": 3 },
+      { "nivel": 10, "madeira": 400, "argila": 890, "ferro": 160, "populacao": 3 },
+      { "nivel": 11, "madeira": 504, "argila": 1135, "ferro": 202, "populacao": 3 },
+      { "nivel": 12, "madeira": 635, "argila": 1447, "ferro": 254, "populacao": 4 },
+      { "nivel": 13, "madeira": 801, "argila": 1846, "ferro": 320, "populacao": 5 },
+      { "nivel": 14, "madeira": 1009, "argila": 2353, "ferro": 404, "populacao": 5 },
+      { "nivel": 15, "madeira": 1271, "argila": 3000, "ferro": 508, "populacao": 7 },
+      { "nivel": 16, "madeira": 1602, "argila": 3825, "ferro": 641, "populacao": 8 },
+      { "nivel": 17, "madeira": 2018, "argila": 4877, "ferro": 807, "populacao": 9 },
+      { "nivel": 18, "madeira": 2543, "argila": 6218, "ferro": 1017, "populacao": 10 },
+      { "nivel": 19, "madeira": 3204, "argila": 7928, "ferro": 1281, "populacao": 12 },
+      { "nivel": 20, "madeira": 4037, "argila": 10109, "ferro": 1615, "populacao": 15 }
+    ],
+    "requisitos": [
+      { "building": "barracks", "level": 1 }
+    ]
+  },
+  "church": {
+    "custos": [
+      { "nivel": 1, "madeira": 16000, "argila": 20000, "ferro": 5000, "populacao": 5000 },
+      { "nivel": 2, "madeira": 20160, "argila": 25600, "ferro": 6300, "populacao": 2750 },
+      { "nivel": 3, "madeira": 25402, "argila": 32768, "ferro": 7938, "populacao": 4263 }
+    ],
+    "requisitos": [
+      { "building": "main", "level": 5 }
+    ]
+  },
+  "academy": {
+    "custos": [
+      { "nivel": 1, "madeira": 15000, "argila": 25000, "ferro": 10000, "populacao": 80 }
+    ],
+    "requisitos": [
+      { "building": "smith", "level": 20 },
+      { "building": "market", "level": 10 },
+      { "building": "main", "level": 20 }
+    ]
+  },
+  "stable": {
+    "custos": [
+      { "nivel": 1, "madeira": 270, "argila": 240, "ferro": 260, "populacao": 8 },
+      { "nivel": 2, "madeira": 340, "argila": 307, "ferro": 328, "populacao": 1 },
+      { "nivel": 3, "madeira": 429, "argila": 393, "ferro": 413, "populacao": 2 },
+      { "nivel": 4, "madeira": 540, "argila": 503, "ferro": 520, "populacao": 2 },
+      { "nivel": 5, "madeira": 681, "argila": 644, "ferro": 655, "populacao": 2 },
+      { "nivel": 6, "madeira": 857, "argila": 825, "ferro": 826, "populacao": 3 },
+      { "nivel": 7, "madeira": 1080, "argila": 1056, "ferro": 1040, "populacao": 3 },
+      { "nivel": 8, "madeira": 1361, "argila": 1351, "ferro": 1311, "populacao": 3 },
+      { "nivel": 9, "madeira": 1715, "argila": 1729, "ferro": 1652, "populacao": 5 },
+      { "nivel": 10, "madeira": 2161, "argila": 2214, "ferro": 2081, "populacao": 5 },
+      { "nivel": 11, "madeira": 2723, "argila": 2833, "ferro": 2622, "populacao": 5 },
+      { "nivel": 12, "madeira": 3431, "argila": 3627, "ferro": 3304, "populacao": 7 },
+      { "nivel": 13, "madeira": 4323, "argila": 4642, "ferro": 4163, "populacao": 8 },
+      { "nivel": 14, "madeira": 5447, "argila": 5942, "ferro": 5246, "populacao": 9 },
+      { "nivel": 15, "madeira": 6864, "argila": 7606, "ferro": 6609, "populacao": 10 },
+      { "nivel": 16, "madeira": 8648, "argila": 9736, "ferro": 8328, "populacao": 12 },
+      { "nivel": 17, "madeira": 10897, "argila": 12462, "ferro": 10493, "populacao": 15 },
+      { "nivel": 18, "madeira": 13730, "argila": 15951, "ferro": 13221, "populacao": 16 },
+      { "nivel": 19, "madeira": 17300, "argila": 20417, "ferro": 16659, "populacao": 20 },
+      { "nivel": 20, "madeira": 21797, "argila": 26134, "ferro": 20990, "populacao": 23 }
+    ],
+    "requisitos": [
+      { "building": "barracks", "level": 5 },
+      { "building": "smith", "level": 5 }
+    ]
+  },
+  "garage": {
+    "custos": [
+      { "nivel": 1, "madeira": 300, "argila": 240, "ferro": 260, "populacao": 8 },
+      { "nivel": 2, "madeira": 378, "argila": 307, "ferro": 328, "populacao": 1 },
+      { "nivel": 3, "madeira": 476, "argila": 393, "ferro": 413, "populacao": 2 },
+      { "nivel": 4, "madeira": 600, "argila": 503, "ferro": 520, "populacao": 2 },
+      { "nivel": 5, "madeira": 756, "argila": 644, "ferro": 655, "populacao": 2 },
+      { "nivel": 6, "madeira": 953, "argila": 825, "ferro": 826, "populacao": 3 },
+      { "nivel": 7, "madeira": 1200, "argila": 1056, "ferro": 1040, "populacao": 3 },
+      { "nivel": 8, "madeira": 1513, "argila": 1351, "ferro": 1311, "populacao": 3 },
+      { "nivel": 9, "madeira": 1906, "argila": 1729, "ferro": 1652, "populacao": 4 },
+      { "nivel": 10, "madeira": 2401, "argila": 2214, "ferro": 2081, "populacao": 5 },
+      { "nivel": 11, "madeira": 3026, "argila": 2833, "ferro": 2622, "populacao": 5 },
+      { "nivel": 12, "madeira": 3812, "argila": 3627, "ferro": 3304, "populacao": 7 },
+      { "nivel": 13, "madeira": 4804, "argila": 4642, "ferro": 4163, "populacao": 8 },
+      { "nivel": 14, "madeira": 6053, "argila": 5942, "ferro": 5246, "populacao": 9 },
+      { "nivel": 15, "madeira": 7626, "argila": 7606, "ferro": 6609, "populacao": 10 }
+    ],
+    "requisitos": [
+      { "building": "barracks", "level": 10 },
+      { "building": "smith", "level": 5 }
+    ]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
