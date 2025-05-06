@@ -204,7 +204,7 @@
     ],
     "requirements": []
   },
-  "clay": {
+  "stone": {
     "custos": [
       { "nivel": 1, "madeira": 65, "argila": 50, "ferro": 40, "populacao": 10 },
       { "nivel": 2, "madeira": 83, "argila": 60, "ferro": 50, "populacao": 1 },
