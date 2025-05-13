@@ -14,13 +14,14 @@
  * This script can NOT be cloned and modified without permission from the script author.
  --------------------------------------------------------------------------------------*/
 
+// User Input
 if (typeof DEBUG !== 'boolean') DEBUG = false;
 
 // Script Config
 var scriptConfig = {
     scriptData: {
         prefix: 'defenseHealthCheck',
-        name: 'Verificação da Saúde da Defesa',
+        name: 'Defense Health Check',
         version: 'v1.2.1',
         author: 'RedAlert',
         authorUrl: 'https://twscripts.dev/',
@@ -28,6 +29,34 @@ var scriptConfig = {
             'https://forum.tribalwars.net/index.php?threads/defense-health-check.289880/',
     },
     translations: {
+        en_DK: {
+            'Defense Health Check': 'Defense Health Check',
+            Help: 'Help',
+            'Redirecting...': 'Redirecting...',
+            'This script needs to be run on village overview!':
+                'This script needs to be run on village overview!',
+            'There was an error fetching troops stationed on your village!':
+                'There was an error fetching troops stationed on your village!',
+            'There was an error fetching simulation data!':
+                'There was an error fetching simulation data!',
+            'Check Stack Health': 'Check Stack Health',
+            'Take into account incoming support':
+                'Take into account incoming support',
+            'Invalid input!': 'Invalid input!',
+            '[SIM]': '[SIM]',
+            'more nuke like this is killed.': 'more nuke like this is killed.',
+            'more nukes like this are killed.':
+                'more nukes like this are killed.',
+            'No nuke is killed!': 'No nuke is killed!',
+            'Enable night bonus': 'Enable night bonus',
+            'Run the script again on village overview!':
+                'Run the script again on village overview!',
+            Reset: 'Reset',
+            'Configuration was resetted!': 'Configuration was resetted!',
+            'Defense Villages': 'Defense Villages',
+            'Nukes needed to clear': 'Nukes needed to clear',
+        },
+ translations: {
         pt_BR: {
             'Defense Health Check': 'Verificação da Saúde da Defesa',
             Help: 'Ajuda',
@@ -55,6 +84,33 @@ var scriptConfig = {
             'Defense Villages': 'Aldeias Defensivas',
             'Nukes needed to clear': 'FULLs necessários para limpar',
         },
+
+        hu_HU: {
+            'Defense Health Check': 'VÃ©delem levizsgÃ¡lÃ³',
+            Help: 'SegÃ­tsÃ©g',
+            'Redirecting...': 'ÃtÃ­rÃ¡nyÃ­tÃ¡s...',
+            'This script needs to be run on village overview!':
+                'A scriptet a falu Ã¡ttekintÃ©snÃ©l kell futtatni!',
+            'There was an error fetching troops stationed on your village!':
+                'Valami hiba jÃ¶tt fel a faluban lÃ©vÅ‘ sereg kiolvasÃ¡sa kÃ¶zben!',
+            'There was an error fetching simulation data!':
+                'Hiba keletkezett a szimulÃ¡ciÃ³ lÃ©trehozÃ¡sa kÃ¶zben!',
+            'Check Stack Health': 'Sereg ellenÅ‘rzÃ©se',
+            'Take into account incoming support':
+                'BejÃ¶vÅ‘ erÅ‘sÃ­tÃ©sek figyelembe vÃ©tele.',
+            'Invalid input!': 'Ã‰rvÃ©nytelen bemenetel!',
+            '[SIM]': '[SZIM]',
+            'more nuke like this is killed.': 'hasonlÃ³ nuke megfogva.',
+            'more nukes like this are killed.': 'hasonlÃ³ nuke megfogva!',
+            'No nuke is killed!': 'Egyetlen egy nuket sem fog meg!',
+            'Enable night bonus': 'Ã‰jszakai bÃ³nusz figyelembe vÃ©tele',
+            'Run the script again on village overview!':
+                'Run the script again on village overview!',
+            Reset: 'Reset',
+            'Configuration was resetted!': 'Configuration was resetted!',
+            'Defense Villages': 'Defense Villages',
+            'Nukes needed to clear': 'Nukes needed to clear',
+        },
     },
     allowedMarkets: [],
     allowedScreens: ['overview'],
@@ -62,6 +118,7 @@ var scriptConfig = {
     isDebug: DEBUG,
     enableCountApi: true,
 };
+
 $.getScript(
     `https://twscripts.dev/scripts/twSDK.js?url=${document.currentScript.src}`,
     async function () {
@@ -532,3 +589,5 @@ $.getScript(
 
             return totalTroops;
         }
+    }
+);
