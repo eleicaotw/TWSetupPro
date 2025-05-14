@@ -11,6 +11,23 @@
 
     await loadScript("https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase.js");
 
+    // 🔄 Aguarda o firebase estar disponível globalmente
+    const waitForFirebase = () => new Promise((resolve, reject) => {
+        let tentativas = 0;
+        const maxTentativas = 50;
+        const intervalo = setInterval(() => {
+            if (typeof window.firebase !== 'undefined') {
+                clearInterval(intervalo);
+                resolve();
+            } else if (++tentativas >= maxTentativas) {
+                clearInterval(intervalo);
+                reject("Timeout: Firebase não disponível.");
+            }
+        }, 100);
+    });
+
+    await waitForFirebase();
+
     const firebaseConfig = {
         apiKey: "AIzaSyDYa-N1F2pHNjyhsEeo8ApypZDk0zz4nU0",
         authDomain: "etiquetador-marquesscript.firebaseapp.com",
