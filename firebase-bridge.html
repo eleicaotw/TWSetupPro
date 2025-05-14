@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Firebase Bridge</title>
+  <script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYa-N1F2pHNjyhsEeo8ApypZDk0zz4nU0",
+      authDomain: "etiquetador-marquesscript.firebaseapp.com",
+      databaseURL: "https://etiquetador-marquesscript-default-rtdb.firebaseio.com",
+      projectId: "etiquetador-marquesscript",
+      storageBucket: "etiquetador-marquesscript.firebasestorage.app",
+      messagingSenderId: "400813493512",
+      appId: "1:400813493512:web:e8d3ba4f46fa457bda70bd"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    window.addEventListener("message", async (event) => {
+      const msg = event.data;
+      if (msg.type === "SET_STATUS") {
+        await db.ref("players/" + msg.player).set({
+          status: msg.status,
+          lastSeen: new Date().toISOString()
+        });
+      }
+
+      if (msg.type === "GET_STATUS") {
+        const snap = await db.ref("players").once("value");
+        event.source.postMessage({
+          type: "STATUS_LIST",
+          data: snap.val() || {}
+        }, "*");
+      }
+    });
+  </script>
+</head>
+<body></body>
+</html>
