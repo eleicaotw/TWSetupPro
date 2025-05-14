@@ -21,12 +21,19 @@
         appId: "1:400813493512:web:e8d3ba4f46fa457bda70bd"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
     const db = firebase.database();
 
     db.ref("players/" + nick).set({
         status: "online",
         lastSeen: new Date().toISOString()
+    }).then(() => {
+        console.log(`[✅ Firebase] Status de ${nick} sincronizado com sucesso.`);
+    }).catch(e => {
+        console.error("❌ Erro ao escrever no Firebase:", e);
     });
 
     window.addEventListener("beforeunload", () => {
@@ -35,6 +42,4 @@
             lastSeen: new Date().toISOString()
         });
     });
-
-    console.log(`[✅ Firebase] Status de ${nick} sincronizado com sucesso.`);
 })();
