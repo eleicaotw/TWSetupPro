@@ -1,62 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Firebase Bridge</title>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <meta charset="UTF-8">
+    <title>Firebase Bridge</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-  <script>
+<script>
+(async function () {
     console.log("[🔥 BRIDGE] Iniciando bridge...");
 
     const firebaseConfig = {
-      apiKey: "AIzaSyDYa-N1F2pHNjyhsEeo8ApypZDk0zz4nU0",
-      authDomain: "etiquetador-marquesscript.firebaseapp.com",
-      databaseURL: "https://etiquetador-marquesscript-default-rtdb.firebaseio.com",
-      projectId: "etiquetador-marquesscript",
-      storageBucket: "etiquetador-marquesscript.appspot.com",
-      messagingSenderId: "400813493512",
-      appId: "1:400813493512:web:e8d3ba4f46fa457bda70bd"
+        apiKey: "AIzaSyDYa-N1F2pHNjyhsEeo8ApypZDk0nz4mU",
+        authDomain: "etiquetador-marquesscript.firebaseapp.com",
+        databaseURL: "https://etiquetador-marquesscript-default-rtdb.firebaseio.com",
+        projectId: "etiquetador-marquesscript",
+        storageBucket: "etiquetador-marquesscript.appspot.com",
+        messagingSenderId: "140081349512",
+        appId: "1:140081349512:web:8bad4f46af457bd7a0b70d"
     };
 
     if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-      console.log("[✅ BRIDGE] Firebase inicializado.");
-    } else {
-      console.warn("[⚠️ BRIDGE] Firebase já estava inicializado.");
+        firebase.initializeApp(firebaseConfig);
     }
 
-    // Aguarda mensagens do script externo
-    window.addEventListener("message", async (event) => {
-      console.log("[🔥 BRIDGE] Mensagem recebida:", event.data);
+    console.log("[✅ BRIDGE] Firebase inicializado.");
+    window.parent.postMessage({ type: "firebase-ready" }, "*");
 
-      if (!event.data || event.data.type !== "set-status" || !event.data.nick) {
-        console.warn("[⚠️ BRIDGE] Dados inválidos recebidos.");
-        return;
-      }
+    window.addEventListener("message", async (e) => {
+        const { type, nick, status, path } = e.data || {};
+        if (!firebase.apps.length) return;
 
-      const nick = event.data.nick;
+        const db = firebase.database();
 
-      try {
-        await firebase.database().ref("players/" + nick).set({
-          status: "online",
-          lastSeen: new Date().toISOString()
-        });
-        console.log(`[✅ BRIDGE] Status de ${nick} sincronizado com sucesso.`);
-      } catch (e) {
-        console.error("[❌ BRIDGE] Erro ao escrever no Firebase:", e);
-      }
+        if (type === "set-status" && nick && status) {
+            const ref = db.ref(`players/${nick}`);
+            const now = new Date().toLocaleString("en-US", {
+                timeZone: "America/Sao_Paulo"
+            });
+            ref.set({
+                status,
+                lastSeen: new Date(now).toISOString()
+            }).then(() => {
+                console.log(`[✅ BRIDGE] Status de ${nick} sincronizado com sucesso.`);
+            }).catch((e) => {
+                console.error("[❌ BRIDGE] Erro ao salvar status:", e);
+            });
+        }
+
+        if (type === "subscribe" && path) {
+            db.ref(path).on("value", (snapshot) => {
+                window.parent.postMessage({
+                    type: "value",
+                    path,
+                    value: snapshot.val()
+                }, "*");
+            });
+        }
     });
-
-    // Atualiza para offline ao sair
-    window.addEventListener("beforeunload", () => {
-      const nick = document.querySelector('#menu_row2 b')?.textContent?.trim() || "Desconhecido";
-      firebase.database().ref("players/" + nick).set({
-        status: "offline",
-        lastSeen: new Date().toISOString()
-      });
-    });
-  </script>
+})();
+</script>
 </body>
 </html>
