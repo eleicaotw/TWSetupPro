@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Firebase Bridge</title>
-  <script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDYa-N1F2pHNjyhsEeo8ApypZDk0zz4nU0",
       authDomain: "etiquetador-marquesscript.firebaseapp.com",
       databaseURL: "https://etiquetador-marquesscript-default-rtdb.firebaseio.com",
       projectId: "etiquetador-marquesscript",
-      storageBucket: "etiquetador-marquesscript.firebasestorage.app",
+      storageBucket: "etiquetador-marquesscript.appspot.com",
       messagingSenderId: "400813493512",
       appId: "1:400813493512:web:e8d3ba4f46fa457bda70bd"
     };
@@ -18,21 +17,26 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    window.addEventListener("message", async (event) => {
+    let nickAtual = null;
+
+    window.addEventListener('message', async (event) => {
       const msg = event.data;
-      if (msg.type === "SET_STATUS") {
-        await db.ref("players/" + msg.player).set({
-          status: msg.status,
+      if (msg.type === 'set-status') {
+        nickAtual = msg.nick;
+        await db.ref("players/" + nickAtual).set({
+          status: "online",
           lastSeen: new Date().toISOString()
         });
-      }
-
-      if (msg.type === "GET_STATUS") {
-        const snap = await db.ref("players").once("value");
-        event.source.postMessage({
-          type: "STATUS_LIST",
-          data: snap.val() || {}
-        }, "*");
+        window.addEventListener("beforeunload", () => {
+          db.ref("players/" + nickAtual).set({
+            status: "offline",
+            lastSeen: new Date().toISOString()
+          });
+        });
+      } else if (msg.type === 'get-status') {
+        const snapshot = await db.ref("players").once("value");
+        const status = snapshot.val() || {};
+        event.source.postMessage({ type: 'status-update', status }, '*');
       }
     });
   </script>
