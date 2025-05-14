@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <title>Firebase Bridge</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
   <script>
+    console.log("[🔥 BRIDGE] Iniciando bridge...");
+
     const firebaseConfig = {
       apiKey: "AIzaSyDYa-N1F2pHNjyhsEeo8ApypZDk0zz4nU0",
       authDomain: "etiquetador-marquesscript.firebaseapp.com",
@@ -14,32 +20,43 @@
       appId: "1:400813493512:web:e8d3ba4f46fa457bda70bd"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+      console.log("[✅ BRIDGE] Firebase inicializado.");
+    } else {
+      console.warn("[⚠️ BRIDGE] Firebase já estava inicializado.");
+    }
 
-    let nickAtual = null;
+    // Aguarda mensagens do script externo
+    window.addEventListener("message", async (event) => {
+      console.log("[🔥 BRIDGE] Mensagem recebida:", event.data);
 
-    window.addEventListener('message', async (event) => {
-      const msg = event.data;
-      if (msg.type === 'set-status') {
-        nickAtual = msg.nick;
-        await db.ref("players/" + nickAtual).set({
+      if (!event.data || event.data.type !== "set-status" || !event.data.nick) {
+        console.warn("[⚠️ BRIDGE] Dados inválidos recebidos.");
+        return;
+      }
+
+      const nick = event.data.nick;
+
+      try {
+        await firebase.database().ref("players/" + nick).set({
           status: "online",
           lastSeen: new Date().toISOString()
         });
-        window.addEventListener("beforeunload", () => {
-          db.ref("players/" + nickAtual).set({
-            status: "offline",
-            lastSeen: new Date().toISOString()
-          });
-        });
-      } else if (msg.type === 'get-status') {
-        const snapshot = await db.ref("players").once("value");
-        const status = snapshot.val() || {};
-        event.source.postMessage({ type: 'status-update', status }, '*');
+        console.log(`[✅ BRIDGE] Status de ${nick} sincronizado com sucesso.`);
+      } catch (e) {
+        console.error("[❌ BRIDGE] Erro ao escrever no Firebase:", e);
       }
     });
+
+    // Atualiza para offline ao sair
+    window.addEventListener("beforeunload", () => {
+      const nick = document.querySelector('#menu_row2 b')?.textContent?.trim() || "Desconhecido";
+      firebase.database().ref("players/" + nick).set({
+        status: "offline",
+        lastSeen: new Date().toISOString()
+      });
+    });
   </script>
-</head>
-<body></body>
+</body>
 </html>
